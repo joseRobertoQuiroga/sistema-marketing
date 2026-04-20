@@ -1,0 +1,438 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:0 0 2rem}
+.top-nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1rem}
+.tn{font-size:12px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.tn.on{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
+.screen{display:none}.screen.on{display:block}
+.frame{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden}
+.topbar{background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:8px 16px;display:flex;align-items:center;gap:10px}
+.logo-pill{font-size:12px;font-weight:500;color:var(--color-text-primary);padding:4px 10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md)}
+.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.avatar{width:24px;height:24px;border-radius:50%;background:var(--color-background-info);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--color-text-info)}
+.layout{display:grid;grid-template-columns:160px 1fr;min-height:380px}
+.sidebar{background:var(--color-background-secondary);border-right:0.5px solid var(--color-border-tertiary);padding:12px 8px}
+.sitem{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);cursor:pointer;margin-bottom:2px}
+.sitem.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+.sitem-dot{width:6px;height:6px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0}
+.sitem.active .sitem-dot{background:var(--color-text-info)}
+.main{padding:16px;background:var(--color-background-primary)}
+.page-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.kc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px}
+.kc-v{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.kc-l{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.kc-d{font-size:10px;margin-top:2px}
+.up{color:var(--color-text-success)}.down{color:var(--color-text-danger)}
+.chart-mock{background:var(--color-background-secondary);border-radius:var(--border-radius-md);height:100px;margin-bottom:10px;display:flex;align-items:flex-end;padding:8px 12px;gap:4px}
+.bar{background:var(--color-background-info);border-radius:2px 2px 0 0;flex:1;opacity:.7}
+.bar.hi{opacity:1}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini-table{font-size:11px;width:100%}
+.mini-table th{text-align:left;padding:4px 6px;border-bottom:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);font-weight:400}
+.mini-table td{padding:4px 6px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.mini-table td:first-child{color:var(--color-text-primary)}
+.badge{display:inline-block;font-size:9px;font-weight:500;padding:1px 5px;border-radius:100px}
+.badge-g{background:var(--color-background-success);color:var(--color-text-success)}
+.badge-a{background:var(--color-background-warning);color:var(--color-text-warning)}
+.badge-r{background:var(--color-background-danger);color:var(--color-text-danger)}
+.badge-b{background:var(--color-background-info);color:var(--color-text-info)}
+.badge-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.upload-zone{border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:20px;text-align:center;margin-bottom:10px}
+.upload-zone p{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.btn-sm{font-size:11px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary);cursor:pointer}
+.btn-primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.variant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.variant-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden}
+.variant-img{background:var(--color-background-info);opacity:.3}
+.variant-lbl{font-size:9px;padding:4px 6px;color:var(--color-text-secondary);border-top:0.5px solid var(--color-border-tertiary)}
+.inbox-layout{display:grid;grid-template-columns:180px 1fr;height:340px}
+.inbox-list{border-right:0.5px solid var(--color-border-tertiary);overflow:hidden}
+.conv-item{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.conv-item.sel{background:var(--color-background-info)}
+.conv-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.conv-prev{font-size:10px;color:var(--color-text-secondary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.conv-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.chat-area{display:flex;flex-direction:column;padding:10px}
+.msg{max-width:75%;margin-bottom:6px;padding:7px 10px;border-radius:var(--border-radius-lg);font-size:11px;line-height:1.5}
+.msg.in{background:var(--color-background-secondary);color:var(--color-text-primary);align-self:flex-start}
+.msg.out{background:var(--color-background-info);color:var(--color-text-info);align-self:flex-end}
+.msg.bot{background:var(--color-background-success);color:var(--color-text-success);align-self:flex-end}
+.chat-msgs{flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start}
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;height:200px;overflow:hidden}
+.k-col{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px}
+.k-title{font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.k-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:6px;margin-bottom:4px;font-size:10px;color:var(--color-text-primary)}
+.k-sub{font-size:9px;color:var(--color-text-secondary);margin-top:2px}
+.settings-rows .srow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.srow-left{color:var(--color-text-primary)}.srow-sub{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+.toggle{width:28px;height:16px;border-radius:100px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);position:relative;flex-shrink:0}
+.toggle.on{background:var(--color-background-success);border-color:var(--color-border-success)}
+.toggle::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--color-text-secondary);position:absolute;top:1.5px;left:1.5px;transition:all .2s}
+.toggle.on::after{background:var(--color-text-success);left:13px}
+.onboarding-steps{display:flex;flex-direction:column;gap:8px}
+.ob-step{display:flex;gap:10px;align-items:flex-start;padding:10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
+.ob-step.done{border-color:var(--color-border-success);background:var(--color-background-success)}
+.ob-step.active{border-color:var(--color-border-info);background:var(--color-background-info)}
+.ob-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.ob-step.done .ob-num{background:var(--color-background-success);color:var(--color-text-success)}
+.ob-step.active .ob-num{background:var(--color-background-info);color:var(--color-text-info)}
+.ob-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.ob-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.note{font-size:11px;color:var(--color-text-secondary);padding:8px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-top:8px;line-height:1.5}
+</style>
+<div class="wrap">
+<div class="top-nav">
+  <button class="tn on" onclick="sw('home')">Onboarding</button>
+  <button class="tn" onclick="sw('dash')">Dashboard</button>
+  <button class="tn" onclick="sw('analytics')">Analytics</button>
+  <button class="tn" onclick="sw('content')">Content Hub</button>
+  <button class="tn" onclick="sw('inbox')">Inbox & Bot</button>
+  <button class="tn" onclick="sw('leads')">Leads CRM</button>
+  <button class="tn" onclick="sw('settings')">Ajustes</button>
+</div>
+
+<div class="screen on" id="s-home">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Configuración inicial</span>
+    </div>
+    <div style="padding:16px">
+      <p style="font-size:13px;color:var(--color-text-primary);font-weight:500;margin-bottom:4px">Bienvenido a OmniPresence</p>
+      <p style="font-size:11px;color:var(--color-text-secondary);margin-bottom:14px">Completa estos 4 pasos para tener tu plataforma activa</p>
+      <div class="onboarding-steps">
+        <div class="ob-step done"><div class="ob-num">1</div><div><div class="ob-title">Crea tu organización</div><div class="ob-sub">Nombre, industria, zona horaria</div></div><span class="badge badge-g" style="margin-left:auto">Listo</span></div>
+        <div class="ob-step active"><div class="ob-num">2</div><div><div class="ob-title">Conecta tus redes sociales</div><div class="ob-sub">Facebook, Instagram, LinkedIn, TikTok — 1 click por plataforma</div></div><button class="btn-sm" style="margin-left:auto;white-space:nowrap">Conectar</button></div>
+        <div class="ob-step"><div class="ob-num">3</div><div><div class="ob-title">Sube tu knowledge base</div><div class="ob-sub">Catálogo, FAQs, políticas — el bot se entrena automáticamente</div></div></div>
+        <div class="ob-step"><div class="ob-num">4</div><div><div class="ob-title">Activa el bot en tus canales</div><div class="ob-sub">Selecciona qué canales responde el bot y configura el tono</div></div></div>
+      </div>
+      <div class="note">Paso 2 de 4 — Conecta al menos una red social para comenzar a ver métricas. El bot puede activarse después.</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-dash">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <select style="font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 8px;background:transparent;color:var(--color-text-primary)"><option>Últimos 30 días</option></select>
+      <div class="topbar-right"><span style="font-size:10px;color:var(--color-text-secondary)">Tienda Moda SCZ</span><div class="avatar">TM</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sitem active"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div class="main">
+        <p class="page-title">Resumen general</p>
+        <div class="krow">
+          <div class="kc"><div class="kc-v">48.2K</div><div class="kc-l">Alcance total</div><div class="kc-d up">+12% vs mes ant.</div></div>
+          <div class="kc"><div class="kc-v">4.8%</div><div class="kc-l">Eng. rate</div><div class="kc-d up">+0.4pp</div></div>
+          <div class="kc"><div class="kc-v">127</div><div class="kc-l">Leads generados</div><div class="kc-d up">+34%</div></div>
+          <div class="kc"><div class="kc-v">$3.20</div><div class="kc-l">Costo/lead</div><div class="kc-d up">-18%</div></div>
+        </div>
+        <div class="chart-mock">
+          <div class="bar" style="height:40%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:70%"></div><div class="bar hi" style="height:90%"></div><div class="bar" style="height:75%"></div>
+          <div class="bar" style="height:60%"></div><div class="bar hi" style="height:85%"></div><div class="bar" style="height:65%"></div>
+          <div class="bar" style="height:80%"></div><div class="bar" style="height:72%"></div><div class="bar hi" style="height:95%"></div>
+        </div>
+        <div class="row2">
+          <div>
+            <p style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px">Top posts del mes</p>
+            <table class="mini-table">
+              <tr><th>Post</th><th>Canal</th><th>Eng.</th></tr>
+              <tr><td>Colección verano</td><td><span class="badge badge-b">IG</span></td><td>7.2%</td></tr>
+              <tr><td>Promo 2x1</td><td><span class="badge badge-b">FB</span></td><td>5.8%</td></tr>
+              <tr><td>Nuevo catálogo</td><td><span class="badge badge-gray">LI</span></td><td>3.4%</td></tr>
+            </table>
+          </div>
+          <div>
+            <p style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px">Alertas recientes</p>
+            <div style="font-size:11px;display:flex;flex-direction:column;gap:5px">
+              <div style="padding:6px 8px;background:var(--color-background-warning);border-radius:var(--border-radius-md);color:var(--color-text-warning)">3 leads calientes sin respuesta</div>
+              <div style="padding:6px 8px;background:var(--color-background-success);border-radius:var(--border-radius-md);color:var(--color-text-success)">Token de LinkedIn renovado</div>
+              <div style="padding:6px 8px;background:var(--color-background-info);border-radius:var(--border-radius-md);color:var(--color-text-info)">2 posts programados para hoy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-analytics">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Analytics</span>
+      <div class="topbar-right">
+        <select style="font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 8px;background:transparent;color:var(--color-text-primary)"><option>Todos los canales</option><option>Facebook</option><option>Instagram</option></select>
+        <button class="btn-sm">Exportar PDF</button>
+      </div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sitem"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem active"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div class="main">
+        <div class="krow">
+          <div class="kc"><div class="kc-v">182K</div><div class="kc-l">Impresiones</div><div class="kc-d up">+8%</div></div>
+          <div class="kc"><div class="kc-v">$840</div><div class="kc-l">Inversión pauta</div><div class="kc-d" style="color:var(--color-text-secondary)">vs $720 ant.</div></div>
+          <div class="kc"><div class="kc-v">2.4x</div><div class="kc-l">ROAS</div><div class="kc-d up">+0.3x</div></div>
+          <div class="kc"><div class="kc-v">+312</div><div class="kc-l">Nuevos seguidores</div><div class="kc-d up">+22%</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button class="btn-sm on" style="background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info)">Engagement</button>
+          <button class="btn-sm">Alcance</button>
+          <button class="btn-sm">Conversiones</button>
+          <button class="btn-sm">Inversión</button>
+        </div>
+        <div class="chart-mock" style="height:80px">
+          <div class="bar" style="height:30%"></div><div class="bar" style="height:50%"></div><div class="bar hi" style="height:85%"></div>
+          <div class="bar" style="height:60%"></div><div class="bar" style="height:45%"></div><div class="bar hi" style="height:90%"></div>
+          <div class="bar" style="height:70%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:65%"></div>
+        </div>
+        <table class="mini-table" style="margin-top:8px">
+          <tr><th>Canal</th><th>Alcance</th><th>Eng.</th><th>Leads</th><th>ROAS</th><th>Estado</th></tr>
+          <tr><td>Instagram</td><td>28K</td><td>5.2%</td><td>74</td><td>3.1x</td><td><span class="badge badge-g">Activo</span></td></tr>
+          <tr><td>Facebook</td><td>14K</td><td>3.8%</td><td>38</td><td>1.9x</td><td><span class="badge badge-g">Activo</span></td></tr>
+          <tr><td>LinkedIn</td><td>4K</td><td>2.1%</td><td>12</td><td>—</td><td><span class="badge badge-g">Activo</span></td></tr>
+          <tr><td>TikTok</td><td>2K</td><td>6.4%</td><td>3</td><td>—</td><td><span class="badge badge-a">Sin pauta</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-content">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Content Hub · Nueva publicación</span>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sitem"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem active"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div class="main">
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <button class="btn-sm" style="background:var(--color-background-info);color:var(--color-text-info)">Nueva publicación</button>
+          <button class="btn-sm">Calendario</button>
+          <button class="btn-sm">Biblioteca</button>
+          <button class="btn-sm">Historial</button>
+        </div>
+        <div class="upload-zone">
+          <p>Arrastra tu imagen o video aquí</p>
+          <button class="btn-sm">Seleccionar archivo</button>
+          <p style="font-size:10px;margin-top:6px">JPG, PNG, MP4 — máx 100MB</p>
+        </div>
+        <p style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px">Variantes generadas automáticamente</p>
+        <div class="variant-grid">
+          <div class="variant-card"><div class="variant-img" style="height:50px"></div><div class="variant-lbl">IG Feed 1:1</div></div>
+          <div class="variant-card"><div class="variant-img" style="height:70px"></div><div class="variant-lbl">IG Stories 9:16</div></div>
+          <div class="variant-card"><div class="variant-img" style="height:40px"></div><div class="variant-lbl">FB Feed 1.91:1</div></div>
+          <div class="variant-card"><div class="variant-img" style="height:45px"></div><div class="variant-lbl">LI Feed 1.91:1</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <div style="flex:1">
+            <p style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px">Caption para Instagram</p>
+            <textarea style="width:100%;font-size:11px;padding:6px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary);resize:none;height:50px">¡Nueva colección verano disponible! ✨ #moda #santacruz</textarea>
+          </div>
+          <div style="flex:1">
+            <p style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px">Programar para</p>
+            <input type="datetime-local" style="font-size:11px;padding:6px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary);width:100%">
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn-sm btn-primary">Programar publicación</button>
+          <button class="btn-sm">Publicar ahora</button>
+          <button class="btn-sm">Guardar borrador</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-inbox">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Inbox unificado</span>
+      <div class="topbar-right">
+        <span class="badge badge-a">3 sin leer</span>
+        <select style="font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 8px;background:transparent;color:var(--color-text-primary)"><option>Todos los canales</option></select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:160px 1fr">
+      <div class="sidebar">
+        <div class="sitem"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem active"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div style="background:var(--color-background-primary)">
+        <div class="inbox-layout">
+          <div class="inbox-list">
+            <div class="conv-item sel">
+              <div class="conv-meta"><span class="conv-name">Maria G.</span><span class="badge badge-a">caliente</span></div>
+              <div class="conv-prev">¿Tienen talla M en el vestido rojo?</div>
+            </div>
+            <div class="conv-item">
+              <div class="conv-meta"><span class="conv-name">Carlos M.</span><span class="badge badge-gray">frío</span></div>
+              <div class="conv-prev">Hola, ¿tienen envío a Cochabamba?</div>
+            </div>
+            <div class="conv-item">
+              <div class="conv-meta"><span class="conv-name">Ana L.</span><span class="badge badge-g">convertido</span></div>
+              <div class="conv-prev">Gracias, ya hice el pedido!</div>
+            </div>
+            <div class="conv-item">
+              <div class="conv-meta"><span class="conv-name">Pedro R.</span><span class="badge badge-b">tibio</span></div>
+              <div class="conv-prev">¿Cuánto cuesta el envío express?</div>
+            </div>
+          </div>
+          <div class="chat-area">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary)">
+              <div class="avatar" style="width:28px;height:28px;font-size:11px">MG</div>
+              <div><p style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Maria G.</p><p style="font-size:10px;color:var(--color-text-secondary)">Instagram DM · score: 72 · caliente</p></div>
+              <button class="btn-sm" style="margin-left:auto">Tomar control</button>
+            </div>
+            <div class="chat-msgs">
+              <div class="msg in">¿Tienen talla M en el vestido rojo del post de hoy?</div>
+              <div class="msg bot">Hola Maria! Sí, el vestido rojo tiene disponibilidad en talla M. El precio es Bs. 180 con envío a domicilio incluido en SCZ. ¿Te lo reservamos?</div>
+              <div class="msg in">Sí! ¿Cómo hago para pagar?</div>
+              <div class="msg bot">Puedes pagar por QR, transferencia bancaria o efectivo en tienda. Te paso el QR ahora mismo. ¿Confirmas la dirección de entrega?</div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <input style="flex:1;font-size:11px;padding:6px 8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary)" placeholder="Escribir mensaje manual...">
+              <button class="btn-sm btn-primary">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-leads">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Pipeline de leads</span>
+      <div class="topbar-right"><button class="btn-sm">Exportar</button></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sitem"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem active"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div class="main">
+        <div class="krow" style="margin-bottom:8px">
+          <div class="kc"><div class="kc-v">127</div><div class="kc-l">Total leads mes</div></div>
+          <div class="kc"><div class="kc-v">29</div><div class="kc-l">Calientes</div><div class="kc-d up">+8 hoy</div></div>
+          <div class="kc"><div class="kc-v">11</div><div class="kc-l">Convertidos</div></div>
+          <div class="kc"><div class="kc-v">Bs 2,430</div><div class="kc-l">Valor generado</div></div>
+        </div>
+        <div class="kanban">
+          <div class="k-col">
+            <div class="k-title" style="color:var(--color-text-secondary)">Frío · 48</div>
+            <div class="k-card">Juan P.<div class="k-sub">IG · hace 2h</div></div>
+            <div class="k-card">Rosa M.<div class="k-sub">FB · ayer</div></div>
+          </div>
+          <div class="k-col">
+            <div class="k-title" style="color:var(--color-text-info)">Tibio · 39</div>
+            <div class="k-card" style="border-color:var(--color-border-info)">Carlos V.<div class="k-sub">IG · score 45</div></div>
+            <div class="k-card" style="border-color:var(--color-border-info)">Lupe A.<div class="k-sub">WA · score 38</div></div>
+          </div>
+          <div class="k-col">
+            <div class="k-title" style="color:var(--color-text-warning)">Caliente · 29</div>
+            <div class="k-card" style="border-color:var(--color-border-warning);background:var(--color-background-warning)">Maria G.<div class="k-sub" style="color:var(--color-text-warning)">score 72 · M en vestido</div></div>
+            <div class="k-card" style="border-color:var(--color-border-warning)">Pedro R.<div class="k-sub">score 68</div></div>
+          </div>
+          <div class="k-col">
+            <div class="k-title" style="color:var(--color-text-success)">Convertido · 11</div>
+            <div class="k-card" style="border-color:var(--color-border-success);background:var(--color-background-success)">Ana L.<div class="k-sub" style="color:var(--color-text-success)">Bs 320 · IG</div></div>
+          </div>
+          <div class="k-col">
+            <div class="k-title" style="color:var(--color-text-danger)">Perdido · 14</div>
+            <div class="k-card">Diego F.<div class="k-sub">sin respuesta 7d</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-settings">
+  <div class="frame">
+    <div class="topbar">
+      <span class="logo-pill">OmniPresence</span>
+      <span style="font-size:11px;color:var(--color-text-secondary)">Ajustes</span>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sitem"><div class="sitem-dot"></div>Dashboard</div>
+        <div class="sitem"><div class="sitem-dot"></div>Analytics</div>
+        <div class="sitem"><div class="sitem-dot"></div>Publicar</div>
+        <div class="sitem"><div class="sitem-dot"></div>Inbox</div>
+        <div class="sitem"><div class="sitem-dot"></div>Leads</div>
+        <div class="sitem active"><div class="sitem-dot"></div>Ajustes</div>
+      </div>
+      <div class="main">
+        <p class="page-title" style="margin-bottom:8px">Organización y bot</p>
+        <div class="settings-rows">
+          <div class="srow"><div><div class="srow-left">Bot activo en Instagram DM</div><div class="srow-sub">Responde automáticamente mensajes entrantes</div></div><div class="toggle on"></div></div>
+          <div class="srow"><div><div class="srow-left">Bot activo en Facebook Messenger</div><div class="srow-sub">Habilitado en este canal</div></div><div class="toggle on"></div></div>
+          <div class="srow"><div><div class="srow-left">Bot activo en WhatsApp</div><div class="srow-sub">Requiere WhatsApp Business API verificada</div></div><div class="toggle"></div></div>
+          <div class="srow"><div><div class="srow-left">Escalado automático de leads calientes</div><div class="srow-sub">Notifica cuando intent_score &gt; 70</div></div><div class="toggle on"></div></div>
+          <div class="srow"><div><div class="srow-left">Tono del bot</div><div class="srow-sub">Formal / amigable / casual</div></div><select style="font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 8px;background:transparent;color:var(--color-text-primary)"><option>Amigable</option></select></div>
+          <div class="srow"><div><div class="srow-left">Idioma del bot</div><div class="srow-sub">Idioma principal de respuestas</div></div><select style="font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px 8px;background:transparent;color:var(--color-text-primary)"><option>Español</option></select></div>
+        </div>
+        <p class="page-title" style="margin:12px 0 8px">Cuentas conectadas</p>
+        <table class="mini-table">
+          <tr><th>Plataforma</th><th>Cuenta</th><th>Estado</th><th>Token</th></tr>
+          <tr><td>Instagram</td><td>@tiendamoda_scz</td><td><span class="badge badge-g">Activo</span></td><td><span class="badge badge-g">Vigente</span></td></tr>
+          <tr><td>Facebook</td><td>Tienda Moda SCZ</td><td><span class="badge badge-g">Activo</span></td><td><span class="badge badge-a">Vence en 5d</span></td></tr>
+          <tr><td>LinkedIn</td><td>Tienda Moda SCZ</td><td><span class="badge badge-g">Activo</span></td><td><span class="badge badge-g">Vigente</span></td></tr>
+          <tr><td>TikTok</td><td>—</td><td><span class="badge badge-gray">No conectado</span></td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const screens=document.querySelectorAll('.screen');
+const tabs=document.querySelectorAll('.tn');
+const map={home:0,dash:1,analytics:2,content:3,inbox:4,leads:5,settings:6};
+function sw(id){
+  screens.forEach(s=>s.classList.remove('on'));
+  tabs.forEach(t=>t.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  tabs[map[id]].classList.add('on');
+}
+</script>

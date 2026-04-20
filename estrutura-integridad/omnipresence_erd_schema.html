@@ -1,0 +1,233 @@
+
+<style>
+#erd svg { width:100%; }
+#erd svg .erDiagram .divider path { stroke-opacity:0.4; }
+#erd svg .erDiagram .row-rect-odd path,
+#erd svg .erDiagram .row-rect-odd rect,
+#erd svg .erDiagram .row-rect-even path,
+#erd svg .erDiagram .row-rect-even rect { stroke:none !important; }
+</style>
+<div id="erd" style="overflow-x:auto"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad:false, theme:'base',
+  fontFamily:'"Anthropic Sans",sans-serif',
+  themeVariables:{
+    darkMode:dark, fontSize:'12px',
+    fontFamily:'"Anthropic Sans",sans-serif',
+    lineColor: dark?'#9c9a92':'#73726c',
+    textColor: dark?'#c2c0b6':'#3d3d3a',
+    primaryColor: dark?'#1e2a38':'#E6F1FB',
+    primaryBorderColor: dark?'#378ADD':'#185FA5',
+    secondaryColor: dark?'#1a2e25':'#E1F5EE',
+    secondaryBorderColor: dark?'#1D9E75':'#0F6E56',
+    tertiaryColor: dark?'#2e2418':'#FAEEDA',
+    tertiaryBorderColor: dark?'#BA7517':'#854F0B',
+  }
+});
+const diagram = `erDiagram
+  ORGANIZATIONS {
+    uuid id PK
+    string name
+    string slug
+    string plan
+    string billing_email
+    jsonb settings
+    timestamp created_at
+  }
+  USERS {
+    uuid id PK
+    uuid org_id FK
+    string email
+    string name
+    string role
+    timestamp last_login
+    timestamp created_at
+  }
+  SOCIAL_ACCOUNTS {
+    uuid id PK
+    uuid org_id FK
+    string platform
+    string platform_account_id
+    string username
+    string access_token
+    string refresh_token
+    timestamp token_expires_at
+    boolean is_active
+    timestamp connected_at
+  }
+  POSTS {
+    uuid id PK
+    uuid org_id FK
+    uuid author_id FK
+    string status
+    string caption_template
+    jsonb platform_captions
+    timestamp scheduled_at
+    timestamp published_at
+    timestamp created_at
+  }
+  POST_ACCOUNTS {
+    uuid id PK
+    uuid post_id FK
+    uuid social_account_id FK
+    string platform_post_id
+    string status
+    string error_message
+    timestamp published_at
+  }
+  POST_ASSETS {
+    uuid id PK
+    uuid post_id FK
+    string asset_type
+    string original_url
+    jsonb variants
+    string focal_point
+    integer file_size_kb
+    timestamp created_at
+  }
+  POST_METRICS {
+    uuid id PK
+    uuid post_account_id FK
+    date metric_date
+    integer impressions
+    integer reach
+    integer likes
+    integer comments
+    integer shares
+    integer saves
+    integer clicks
+    integer video_views
+    numeric engagement_rate
+    numeric spend_usd
+    integer conversions
+    integer leads
+    numeric cost_per_lead
+    numeric roas
+    timestamp synced_at
+  }
+  ACCOUNT_METRICS {
+    uuid id PK
+    uuid social_account_id FK
+    date metric_date
+    integer followers
+    integer followers_delta
+    integer total_posts
+    numeric avg_engagement_rate
+    numeric total_spend_usd
+    integer total_leads
+    integer total_conversions
+    timestamp synced_at
+  }
+  LEADS {
+    uuid id PK
+    uuid org_id FK
+    uuid social_account_id FK
+    string platform
+    string platform_user_id
+    string display_name
+    string contact_identifier
+    string status
+    integer intent_score
+    string first_contact_source
+    timestamp first_contact_at
+    timestamp last_activity_at
+    timestamp converted_at
+    numeric conversion_value
+    timestamp created_at
+  }
+  CONVERSATIONS {
+    uuid id PK
+    uuid lead_id FK
+    uuid social_account_id FK
+    string platform_thread_id
+    string assigned_to_user_id
+    boolean bot_active
+    string handoff_reason
+    integer message_count
+    timestamp last_message_at
+    timestamp created_at
+  }
+  MESSAGES {
+    uuid id PK
+    uuid conversation_id FK
+    string direction
+    string content
+    string sender_type
+    jsonb metadata
+    float confidence_score
+    timestamp created_at
+  }
+  KNOWLEDGE_CHUNKS {
+    uuid id PK
+    uuid org_id FK
+    string source_type
+    string source_name
+    text content
+    vector embedding
+    jsonb metadata
+    boolean is_active
+    timestamp created_at
+  }
+  ASSETS {
+    uuid id PK
+    uuid org_id FK
+    string filename
+    string storage_key
+    string mime_type
+    integer file_size_kb
+    integer width_px
+    integer height_px
+    integer duration_sec
+    string alt_text
+    jsonb tags
+    timestamp uploaded_at
+  }
+  ALERTS {
+    uuid id PK
+    uuid org_id FK
+    string type
+    string severity
+    string message
+    jsonb context_data
+    boolean is_read
+    timestamp triggered_at
+  }
+
+  ORGANIZATIONS ||--o{ USERS : "tiene"
+  ORGANIZATIONS ||--o{ SOCIAL_ACCOUNTS : "conecta"
+  ORGANIZATIONS ||--o{ POSTS : "publica"
+  ORGANIZATIONS ||--o{ LEADS : "captura"
+  ORGANIZATIONS ||--o{ KNOWLEDGE_CHUNKS : "entrena"
+  ORGANIZATIONS ||--o{ ASSETS : "almacena"
+  ORGANIZATIONS ||--o{ ALERTS : "recibe"
+  USERS ||--o{ POSTS : "crea"
+  SOCIAL_ACCOUNTS ||--o{ POST_ACCOUNTS : "recibe"
+  SOCIAL_ACCOUNTS ||--o{ ACCOUNT_METRICS : "genera"
+  SOCIAL_ACCOUNTS ||--o{ LEADS : "origina"
+  SOCIAL_ACCOUNTS ||--o{ CONVERSATIONS : "aloja"
+  POSTS ||--o{ POST_ACCOUNTS : "distribuye"
+  POSTS ||--o{ POST_ASSETS : "adjunta"
+  POST_ACCOUNTS ||--o{ POST_METRICS : "acumula"
+  LEADS ||--o{ CONVERSATIONS : "tiene"
+  CONVERSATIONS ||--o{ MESSAGES : "contiene"
+`;
+const {svg} = await mermaid.render('erd-main', diagram);
+document.getElementById('erd').innerHTML = svg;
+document.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {
+  const fp = node.querySelector('path[d]');
+  if(!fp) return;
+  const nums = fp.getAttribute('d').match(/-?[\d.]+/g)?.map(Number);
+  if(!nums||nums.length<8) return;
+  const xs=[nums[0],nums[2],nums[4],nums[6]], ys=[nums[1],nums[3],nums[5],nums[7]];
+  const x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;
+  const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx','8');
+  ['fill','stroke','stroke-width','class','style'].forEach(a=>{if(fp.hasAttribute(a))r.setAttribute(a,fp.getAttribute(a))});
+  fp.replaceWith(r);
+});
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path,#erd svg.erDiagram .row-rect-even path').forEach(p=>p.setAttribute('stroke','none'));
+</script>

@@ -1,0 +1,186 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:0 0 2rem;font-family:var(--font-sans)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1rem}
+.tab{font-size:12px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.tab.on{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
+.pane{display:none}.pane.on{display:block}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.04em;text-transform:uppercase;margin:1.25rem 0 0.5rem;padding-bottom:4px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.metric-row{display:grid;grid-template-columns:180px 1fr 100px 80px;gap:8px;align-items:start;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.metric-row:last-child{border-bottom:none}
+.mname{font-weight:500;color:var(--color-text-primary)}
+.mdef{color:var(--color-text-secondary);line-height:1.5}
+.mobj{color:var(--color-text-secondary)}
+.chip{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:100px}
+.c-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.c-green{background:var(--color-background-success);color:var(--color-text-success)}
+.c-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.c-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.c-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.hrow{font-size:10px;font-weight:500;color:var(--color-text-secondary);display:grid;grid-template-columns:180px 1fr 100px 80px;gap:8px;padding:4px 0;border-bottom:0.5px solid var(--color-border-secondary);text-transform:uppercase;letter-spacing:.04em}
+.formula{font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary);padding:2px 6px;border-radius:4px;display:inline-block;margin-top:3px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1rem}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.kpi-val{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.kpi-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.kpi-tgt{font-size:10px;color:var(--color-text-success);margin-top:2px}
+.flow-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.step-n{min-width:22px;height:22px;border-radius:50%;background:var(--color-background-info);color:var(--color-text-info);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.step-title{font-weight:500;color:var(--color-text-primary);font-size:12px}
+</style>
+<div class="wrap">
+<div class="tabs">
+  <button class="tab on" onclick="sw(0)">M1 · Analytics</button>
+  <button class="tab" onclick="sw(1)">M2 · Contenido</button>
+  <button class="tab" onclick="sw(2)">M3 · Bot & Leads</button>
+  <button class="tab" onclick="sw(3)">KPIs del negocio SaaS</button>
+  <button class="tab" onclick="sw(4)">Definiciones de datos</button>
+</div>
+
+<div class="pane on" id="p0">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-val" id="k-eng">4.2%</div><div class="kpi-lbl">Engagement rate</div><div class="kpi-tgt">Objetivo &gt;3%</div></div>
+    <div class="kpi"><div class="kpi-val">2.8x</div><div class="kpi-lbl">ROAS promedio</div><div class="kpi-tgt">Objetivo &gt;2x</div></div>
+    <div class="kpi"><div class="kpi-val">$4.20</div><div class="kpi-lbl">Costo por lead</div><div class="kpi-tgt">Objetivo &lt;$6</div></div>
+    <div class="kpi"><div class="kpi-val">12.4%</div><div class="kpi-lbl">CTR promedio</div><div class="kpi-tgt">Objetivo &gt;8%</div></div>
+  </div>
+
+  <div class="section-label">Métricas de publicaciones (por post)</div>
+  <div class="hrow"><span>Métrica</span><span>Definición + fórmula</span><span>Origen</span><span>Frecuencia</span></div>
+  <div class="metric-row"><span class="mname">Impresiones</span><div><div class="mdef">Veces que el post apareció en pantalla (incluye repetidos)</div></div><span class="chip c-blue">Meta API</span><span class="mobj">4h</span></div>
+  <div class="metric-row"><span class="mname">Alcance (reach)</span><div><div class="mdef">Cuentas únicas que vieron el post</div></div><span class="chip c-blue">Meta API</span><span class="mobj">4h</span></div>
+  <div class="metric-row"><span class="mname">Engagement rate</span><div><div class="mdef">Interacciones totales / alcance × 100</div><div class="formula">(likes + cmts + shares + saves) / reach × 100</div></div><span class="chip c-gray">Calculado</span><span class="mobj">En sync</span></div>
+  <div class="metric-row"><span class="mname">CTR</span><div><div class="mdef">Clics en el post / impresiones × 100</div><div class="formula">clicks / impressions × 100</div></div><span class="chip c-gray">Calculado</span><span class="mobj">En sync</span></div>
+  <div class="metric-row"><span class="mname">Video completion</span><div><div class="mdef">% de usuarios que vieron el video completo</div></div><span class="chip c-blue">Meta / TikTok</span><span class="mobj">4h</span></div>
+  <div class="metric-row"><span class="mname">Conversiones</span><div><div class="mdef">Acciones objetivo realizadas (compra, formulario, llamada)</div></div><span class="chip c-blue">Pixel / API</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">CPM</span><div><div class="mdef">Costo por cada 1,000 impresiones</div><div class="formula">gasto / impresiones × 1000</div></div><span class="chip c-gray">Calculado</span><span class="mobj">En sync</span></div>
+  <div class="metric-row"><span class="mname">CPA</span><div><div class="mdef">Costo por acción / conversión</div><div class="formula">gasto_total / conversiones</div></div><span class="chip c-gray">Calculado</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">ROAS</span><div><div class="mdef">Retorno sobre gasto publicitario</div><div class="formula">ingresos_atribuidos / gasto_pauta</div></div><span class="chip c-gray">Calculado</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Leads generados</span><div><div class="mdef">Formularios completados, DMs, comentarios clasificados</div></div><span class="chip c-amber">Módulo 3</span><span class="mobj">Real-time</span></div>
+  <div class="metric-row"><span class="mname">CPL (costo/lead)</span><div><div class="mdef">Costo por lead generado</div><div class="formula">gasto_pauta / leads_totales</div></div><span class="chip c-gray">Calculado</span><span class="mobj">Diario</span></div>
+
+  <div class="section-label">Métricas de cuenta / canal (agregadas)</div>
+  <div class="hrow"><span>Métrica</span><span>Definición + fórmula</span><span>Origen</span><span>Frecuencia</span></div>
+  <div class="metric-row"><span class="mname">Crecimiento de seguidores</span><div><div class="mdef">Delta de seguidores en el período seleccionado</div><div class="formula">followers_hoy - followers_inicio_periodo</div></div><span class="chip c-blue">API</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Tasa de crecimiento</span><div><div class="mdef">Crecimiento relativo de seguidores</div><div class="formula">delta_followers / followers_inicio × 100</div></div><span class="chip c-gray">Calculado</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Frecuencia de publicación</span><div><div class="mdef">Posts publicados en el período</div></div><span class="chip c-gray">Interno</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Mejor día / hora</span><div><div class="mdef">Segmento temporal con mayor engagement promedio histórico</div></div><span class="chip c-gray">Calculado</span><span class="mobj">Semanal</span></div>
+  <div class="metric-row"><span class="mname">Share of voice</span><div><div class="mdef">Participación de la marca en el total de menciones del sector (futuro)</div></div><span class="chip c-gray">Social listen.</span><span class="mobj">Semanal</span></div>
+  <div class="metric-row"><span class="mname">Inversión total</span><div><div class="mdef">Suma de gasto en pauta por canal y período</div></div><span class="chip c-blue">Ads API</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Top 3 posts</span><div><div class="mdef">Posts con mayor engagement_rate en el período filtrado</div></div><span class="chip c-gray">Calculado</span><span class="mobj">En sync</span></div>
+</div>
+
+<div class="pane" id="p1">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-val">47</div><div class="kpi-lbl">Posts programados</div><div class="kpi-tgt">Objetivo: &gt;20/mes</div></div>
+    <div class="kpi"><div class="kpi-val">5</div><div class="kpi-lbl">Canales activos</div><div class="kpi-tgt">Objetivo: 3-5</div></div>
+    <div class="kpi"><div class="kpi-val">98%</div><div class="kpi-lbl">Tasa de éxito publicación</div><div class="kpi-tgt">Objetivo: &gt;95%</div></div>
+    <div class="kpi"><div class="kpi-val">1.2s</div><div class="kpi-lbl">Tiempo de procesado asset</div><div class="kpi-tgt">Objetivo: &lt;3s</div></div>
+  </div>
+
+  <div class="section-label">Datos del asset (por archivo subido)</div>
+  <div class="hrow"><span>Campo</span><span>Descripción + uso</span><span>Tipo</span><span>Requerido</span></div>
+  <div class="metric-row"><span class="mname">Tipo de asset</span><div class="mdef">image / video / carousel — determina qué variantes se generan</div><span class="chip c-gray">enum</span><span class="chip c-red">sí</span></div>
+  <div class="metric-row"><span class="mname">Dimensiones originales</span><div class="mdef">Ancho × alto en píxeles del archivo original subido</div><span class="chip c-gray">int × int</span><span class="chip c-red">sí</span></div>
+  <div class="metric-row"><span class="mname">Punto focal</span><div class="mdef">Coordenada (x,y) normalizada del área de interés para crop inteligente</div><div class="formula">{x: 0.5, y: 0.3} — centro-superior</div><span class="chip c-gray">jsonb</span><span class="chip c-gray">opcional</span></div>
+  <div class="metric-row"><span class="mname">Variantes generadas</span><div class="mdef">Array de objetos con plataforma, formato, dimensión, URL en storage</div><div class="formula">[{platform:"instagram", format:"feed_square", w:1080, h:1080, url:"..."}]</div><span class="chip c-gray">jsonb</span><span class="chip c-red">sí</span></div>
+  <div class="metric-row"><span class="mname">Alt text</span><div class="mdef">Descripción accesible — requerida por LinkedIn, Instagram</div><span class="chip c-gray">text</span><span class="chip c-amber">recomendado</span></div>
+  <div class="metric-row"><span class="mname">Peso del archivo</span><div class="mdef">KB del original y de cada variante — importante para carga móvil</div><span class="chip c-gray">integer</span><span class="chip c-red">sí</span></div>
+
+  <div class="section-label">Datos del post programado</div>
+  <div class="hrow"><span>Campo</span><span>Descripción</span><span>Tipo</span><span>Estado</span></div>
+  <div class="metric-row"><span class="mname">Caption por plataforma</span><div class="mdef">Texto diferenciado por canal — FB hasta 63,206 chars, IG 2,200, TikTok 2,200, LI 3,000</div><span class="chip c-gray">jsonb</span><span class="chip c-red">sí</span></div>
+  <div class="metric-row"><span class="mname">Hashtags por canal</span><div class="mdef">Array de strings — IG recomienda 3-5, TikTok 3-5, LI 3-5</div><span class="chip c-gray">string[]</span><span class="chip c-amber">recomendado</span></div>
+  <div class="metric-row"><span class="mname">Estado del post</span><div class="mdef">draft / scheduled / publishing / published / failed</div><span class="chip c-gray">enum</span><span class="chip c-red">sí</span></div>
+  <div class="metric-row"><span class="mname">Error de publicación</span><div class="mdef">Mensaje de la API de la plataforma si el post falla — visible al usuario con acción sugerida</div><span class="chip c-gray">text</span><span class="chip c-gray">si aplica</span></div>
+  <div class="metric-row"><span class="mname">Plataformas objetivo</span><div class="mdef">Qué canales reciben este post — puede ser subset de todos los conectados</div><span class="chip c-gray">uuid[]</span><span class="chip c-red">sí</span></div>
+
+  <div class="section-label">Métricas operativas del módulo de contenido</div>
+  <div class="hrow"><span>Métrica</span><span>Definición</span><span>Objetivo</span><span>Alerta</span></div>
+  <div class="metric-row"><span class="mname">Posts exitosos / fallidos</span><div class="mdef">Ratio de publicaciones sin error vs con error en el período</div><span class="chip c-green">&gt;95%</span><span class="chip c-red">&lt;90%</span></div>
+  <div class="metric-row"><span class="mname">Tiempo promedio crop</span><div class="mdef">Latencia del job de procesado de imágenes en cola</div><span class="chip c-green">&lt;3s</span><span class="chip c-red">&gt;10s</span></div>
+  <div class="metric-row"><span class="mname">Assets en biblioteca</span><div class="mdef">Total de archivos subidos — indicador de engagement del usuario con la plataforma</div><span class="chip c-gray">conteo</span><span class="chip c-gray">—</span></div>
+  <div class="metric-row"><span class="mname">Canales con token expirado</span><div class="mdef">Cuentas conectadas cuyo access_token vence en menos de 7 días</div><span class="chip c-green">0</span><span class="chip c-red">&gt;0</span></div>
+</div>
+
+<div class="pane" id="p2">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-val">68%</div><div class="kpi-lbl">Tasa resolución bot</div><div class="kpi-tgt">Objetivo &gt;60%</div></div>
+    <div class="kpi"><div class="kpi-val">23%</div><div class="kpi-lbl">Leads calificados</div><div class="kpi-tgt">Objetivo &gt;20%</div></div>
+    <div class="kpi"><div class="kpi-val">8.3%</div><div class="kpi-lbl">Tasa de conversión</div><div class="kpi-tgt">Objetivo &gt;5%</div></div>
+    <div class="kpi"><div class="kpi-val">47s</div><div class="kpi-lbl">Tiempo primer respuesta</div><div class="kpi-tgt">Objetivo &lt;60s</div></div>
+  </div>
+
+  <div class="section-label">Datos de lead (entidad LEADS)</div>
+  <div class="hrow"><span>Campo</span><span>Descripción + uso en clasificación</span><span>Tipo</span><span>Fuente</span></div>
+  <div class="metric-row"><span class="mname">intent_score</span><div><div class="mdef">Puntuación 0–100 calculada por el LLM al analizar el hilo de conversación</div><div class="formula">0-20: frío · 21-50: tibio · 51-80: caliente · 81-100: comprador</div></div><span class="chip c-gray">integer</span><span class="chip c-amber">LLM</span></div>
+  <div class="metric-row"><span class="mname">status</span><div><div class="mdef">cold / warm / hot / converted / lost — actualizado automáticamente por umbral de intent_score o manualmente</div></div><span class="chip c-gray">enum</span><span class="chip c-amber">Auto/Manual</span></div>
+  <div class="metric-row"><span class="mname">first_contact_source</span><div><div class="mdef">De dónde vino el lead: dm_instagram / comment_fb / post_link / whatsapp / web</div></div><span class="chip c-gray">string</span><span class="chip c-blue">Webhook</span></div>
+  <div class="metric-row"><span class="mname">contact_identifier</span><div><div class="mdef">Email, teléfono, o username según lo que el bot pudo capturar durante la conversación</div></div><span class="chip c-gray">string</span><span class="chip c-amber">Bot</span></div>
+  <div class="metric-row"><span class="mname">conversion_value</span><div><div class="mdef">Valor económico de la venta si se marcó como convertido — alimenta el cálculo de ROI</div></div><span class="chip c-gray">numeric</span><span class="chip c-gray">Manual</span></div>
+  <div class="metric-row"><span class="mname">time_to_convert</span><div><div class="mdef">Tiempo entre first_contact_at y converted_at — indicador de ciclo de venta</div><div class="formula">converted_at - first_contact_at</div></div><span class="chip c-gray">interval</span><span class="chip c-gray">Calculado</span></div>
+
+  <div class="section-label">Datos de conversación y bot</div>
+  <div class="hrow"><span>Campo</span><span>Descripción</span><span>Tipo</span><span>Uso</span></div>
+  <div class="metric-row"><span class="mname">confidence_score</span><div class="mdef">Certeza del bot en cada respuesta (0.0–1.0). Si baja de 0.6, ofrece escalar a humano</div><span class="chip c-gray">float</span><span class="chip c-amber">Umbral escalado</span></div>
+  <div class="metric-row"><span class="mname">handoff_reason</span><div class="mdef">Por qué se traspasó al humano: low_confidence / user_request / hot_lead / fallback</div><span class="chip c-gray">enum</span><span class="chip c-gray">Reporting</span></div>
+  <div class="metric-row"><span class="mname">bot_active</span><div class="mdef">Si el bot está respondiendo en esta conversación o fue tomada por humano</div><span class="chip c-gray">boolean</span><span class="chip c-gray">Control</span></div>
+  <div class="metric-row"><span class="mname">message_count</span><div class="mdef">Número total de mensajes — conversaciones largas (>10) con alto intent = muy calientes</div><span class="chip c-gray">integer</span><span class="chip c-amber">Scoring</span></div>
+
+  <div class="section-label">Métricas del bot (reportes ejecutivos)</div>
+  <div class="hrow"><span>Métrica</span><span>Fórmula</span><span>Objetivo</span><span>Alerta</span></div>
+  <div class="metric-row"><span class="mname">Tasa de resolución</span><div class="formula">conv. resueltas sin humano / total conv. × 100</div><span class="chip c-green">&gt;60%</span><span class="chip c-red">&lt;40%</span></div>
+  <div class="metric-row"><span class="mname">Tasa de calificación</span><div class="formula">leads warm+hot+converted / total leads × 100</div><span class="chip c-green">&gt;20%</span><span class="chip c-red">&lt;10%</span></div>
+  <div class="metric-row"><span class="mname">Tasa de conversión</span><div class="formula">leads converted / total leads × 100</div><span class="chip c-green">&gt;5%</span><span class="chip c-red">&lt;2%</span></div>
+  <div class="metric-row"><span class="mname">Tiempo primer respuesta</span><div class="formula">avg(first_bot_message_at - lead_first_message_at)</div><span class="chip c-green">&lt;60s</span><span class="chip c-red">&gt;5min</span></div>
+  <div class="metric-row"><span class="mname">Valor generado por bot</span><div class="formula">sum(conversion_value) de leads donde first_contact = bot</div><span class="chip c-gray">$</span><span class="chip c-gray">Tendencia</span></div>
+  <div class="metric-row"><span class="mname">Topics más frecuentes</span><div class="mdef">Agrupación de mensajes por intent detectado — indica gaps en la knowledge base</div><span class="chip c-amber">LLM tag</span><span class="chip c-gray">Semanal</span></div>
+</div>
+
+<div class="pane" id="p3">
+  <div class="section-label">KPIs de salud del SaaS (vista interna Anthropic / founder)</div>
+  <div class="hrow"><span>Métrica</span><span>Fórmula</span><span>Objetivo mes 6</span><span>Frecuencia</span></div>
+  <div class="metric-row"><span class="mname">MRR</span><div class="formula">sum(plan_price × active_orgs_per_plan)</div><span class="chip c-green">$2,000</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">ARR</span><div class="formula">MRR × 12</div><span class="chip c-green">$24,000</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Churn mensual</span><div class="formula">orgs_canceladas / orgs_inicio_mes × 100</div><span class="chip c-green">&lt;3%</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">Trial-to-paid</span><div class="formula">orgs_que_pagaron / orgs_que_iniciaron_trial × 100</div><span class="chip c-green">&gt;15%</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">ARPU</span><div class="formula">MRR / total_orgs_activas</div><span class="chip c-green">$45</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">LTV</span><div class="formula">ARPU / churn_rate</div><span class="chip c-green">$1,500</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">CAC</span><div class="formula">gasto_marketing / nuevos_clientes_pagos</div><span class="chip c-green">&lt;$100</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">LTV/CAC</span><div class="formula">LTV / CAC</div><span class="chip c-green">&gt;3x</span><span class="mobj">Mensual</span></div>
+
+  <div class="section-label">Métricas de activación y engagement de producto</div>
+  <div class="hrow"><span>Métrica</span><span>Definición</span><span>Objetivo</span><span>Frecuencia</span></div>
+  <div class="metric-row"><span class="mname">Activación (D7)</span><div class="mdef">% de orgs que conectaron 2+ canales en los primeros 7 días</div><span class="chip c-green">&gt;50%</span><span class="mobj">Semanal</span></div>
+  <div class="metric-row"><span class="mname">Módulos activos</span><div class="mdef">Promedio de módulos usados por organización activa en el mes</div><span class="chip c-green">&gt;2.5</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">DAU / MAU</span><div class="mdef">Stickiness: usuarios activos diarios vs mensuales</div><span class="chip c-green">&gt;20%</span><span class="mobj">Diario</span></div>
+  <div class="metric-row"><span class="mname">Posts creados / org</span><div class="mdef">Promedio de posts programados por organización activa — indica adopción del Módulo 2</div><span class="chip c-green">&gt;8/mes</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">Conversaciones bot / org</span><div class="mdef">Promedio de conversaciones procesadas — adopción del Módulo 3</div><span class="chip c-green">&gt;50/mes</span><span class="mobj">Mensual</span></div>
+  <div class="metric-row"><span class="mname">NPS</span><div class="mdef">Net Promoter Score — encuesta trimestral in-app a usuarios activos</div><span class="chip c-green">&gt;45</span><span class="mobj">Trimestral</span></div>
+</div>
+
+<div class="pane" id="p4">
+  <div class="section-label">Convenciones y tipos de datos</div>
+  <div class="flow-step"><div class="step-n">1</div><div><div class="step-title">UUIDs como PKs</div><div class="step-body">Todas las entidades usan UUID v4 — evita colisiones en entorno multi-tenant y permite generación en cliente sin round-trip al servidor.</div></div></div>
+  <div class="flow-step"><div class="step-n">2</div><div><div class="step-title">organization_id en todas las tablas</div><div class="step-body">Aislamiento de datos por tenant. Row-level security en Postgres filtra automáticamente por org. Nunca se cruzan datos entre clientes.</div></div></div>
+  <div class="flow-step"><div class="step-n">3</div><div><div class="step-title">jsonb para datos variables por plataforma</div><div class="step-body">post_assets.variants, posts.platform_captions y messages.metadata usan jsonb — las plataformas tienen campos distintos y evolucionan sin requerir migraciones.</div></div></div>
+  <div class="flow-step"><div class="step-n">4</div><div><div class="step-title">Timestamps en UTC siempre</div><div class="step-body">Todos los campos de tiempo son TIMESTAMPTZ en UTC. La conversión a zona horaria del negocio ocurre en el frontend según el timezone configurado en ORGANIZATIONS.settings.</div></div></div>
+  <div class="flow-step"><div class="step-n">5</div><div><div class="step-title">Vector embeddings en pgvector</div><div class="step-body">KNOWLEDGE_CHUNKS.embedding es de tipo vector(1536) — compatible con text-embedding-3-small de OpenAI o claude embeddings. Índice HNSW para búsqueda semántica en &lt;50ms.</div></div></div>
+  <div class="flow-step"><div class="step-n">6</div><div><div class="step-title">Particionado de métricas por fecha</div><div class="step-body">POST_METRICS y ACCOUNT_METRICS son tablas particionadas por metric_date (rango mensual). Las consultas de dashboards aplican partition pruning y evitan full-scans.</div></div></div>
+  <div class="flow-step"><div class="step-n">7</div><div><div class="step-title">Índices críticos</div><div class="step-body">org_id + created_at DESC en todas las tablas principales. platform + platform_account_id UNIQUE en SOCIAL_ACCOUNTS. lead_id + created_at en MESSAGES. metric_date + post_account_id en POST_METRICS.</div></div></div>
+  <div class="flow-step"><div class="step-n">8</div><div><div class="step-title">Soft delete</div><div class="step-body">LEADS, CONVERSATIONS y KNOWLEDGE_CHUNKS no se borran físicamente — tienen deleted_at timestamp. Permite recuperación y auditoría. ASSETS sí se borra físico (también en S3/R2).</div></div></div>
+</div>
+</div>
+
+<script>
+const panes = document.querySelectorAll('.pane');
+const tabs = document.querySelectorAll('.tab');
+function sw(i){
+  panes.forEach(p=>p.classList.remove('on'));
+  tabs.forEach(t=>t.classList.remove('on'));
+  panes[i].classList.add('on');
+  tabs[i].classList.add('on');
+}
+</script>

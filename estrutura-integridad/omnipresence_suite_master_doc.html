@@ -1,0 +1,694 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.doc{max-width:680px;padding:0 0 2rem}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding:1rem;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary)}
+.nav button{font-size:12px;padding:6px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.nav button.active{background:var(--color-background-primary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.nav button:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.section{display:none}
+.section.active{display:block}
+.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);font-weight:500;margin:2px}
+.tag-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.tag-green{background:var(--color-background-success);color:var(--color-text-success)}
+.tag-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.tag-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.tag-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.card-accent-blue{border-left:3px solid var(--color-border-info)}
+.card-accent-green{border-left:3px solid var(--color-border-success)}
+.card-accent-amber{border-left:3px solid var(--color-border-warning)}
+.card-accent-red{border-left:3px solid var(--color-border-danger)}
+.card-accent-purple{border-left:3px solid #534AB7}
+h2{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.75rem}
+h3{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.5rem}
+p{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin-bottom:0.5rem}
+ul{font-size:13px;color:var(--color-text-secondary);padding-left:1.2rem;line-height:1.8}
+li{margin-bottom:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.875rem;text-align:center}
+.stat-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:4px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+.module-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.mod-icon{width:36px;height:36px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.badge-required{font-size:10px;font-weight:500;padding:2px 7px;border-radius:var(--border-radius-md);background:var(--color-background-success);color:var(--color-text-success)}
+.badge-optional{font-size:10px;font-weight:500;padding:2px 7px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.comp-row{display:flex;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);gap:8px;font-size:13px}
+.comp-row:last-child{border-bottom:none}
+.comp-name{font-weight:500;color:var(--color-text-primary);min-width:100px}
+.comp-price{color:var(--color-text-secondary);min-width:110px;font-size:12px}
+.comp-gap{flex:1;color:var(--color-text-secondary);font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:100px;margin:2px}
+.pill-in{background:var(--color-background-success);color:var(--color-text-success)}
+.pill-out{background:var(--color-background-danger);color:var(--color-text-danger)}
+.pill-part{background:var(--color-background-warning);color:var(--color-text-warning)}
+.roadmap-row{display:flex;gap:0;margin-bottom:0.75rem}
+.phase-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);min-width:80px;padding-top:3px}
+.phase-items{flex:1}
+.phase-item{font-size:12px;color:var(--color-text-secondary);padding:4px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);margin-bottom:4px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px;border-bottom:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);font-weight:500}
+td{padding:8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);vertical-align:top}
+td:first-child{color:var(--color-text-primary);font-weight:500}
+.highlight-row{background:var(--color-background-info)}
+.check{color:var(--color-text-success)}
+.cross{color:var(--color-text-danger)}
+</style>
+
+<div class="doc">
+<div class="nav" id="nav">
+  <button class="active" onclick="show('vision')">Visión</button>
+  <button onclick="show('m1')">Módulo 1 · Analytics</button>
+  <button onclick="show('m2')">Módulo 2 · Content Hub</button>
+  <button onclick="show('m3')">Módulo 3 · Bot IA</button>
+  <button onclick="show('arch')">Arquitectura</button>
+  <button onclick="show('comp')">Competencia</button>
+  <button onclick="show('biz')">Negocio & SaaS</button>
+  <button onclick="show('road')">Roadmap</button>
+  <button onclick="show('future')">Futuro</button>
+</div>
+
+<!-- VISION -->
+<div class="section active" id="s-vision">
+  <div class="card card-accent-blue">
+    <h2>OmniPresence Suite — visión del producto</h2>
+    <p>Plataforma SaaS todo-en-uno que centraliza la presencia digital de una empresa: métricas unificadas de redes sociales, publicación adaptativa de contenido y automatización de atención al cliente con IA entrenada en la lógica del negocio. Dirigido a PYMEs y SMBs con presencia multicanal que hoy operan con 4–7 herramientas dispersas.</p>
+    <div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:4px">
+      <span class="tag tag-blue">Facebook · Instagram · TikTok · LinkedIn</span>
+      <span class="tag tag-blue">Web propia</span>
+      <span class="tag tag-green">Analítica unificada</span>
+      <span class="tag tag-green">Publicación centralizada</span>
+      <span class="tag tag-amber">IA conversacional</span>
+      <span class="tag tag-amber">Leads & ventas</span>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-bottom:1rem">
+    <div class="stat"><div class="stat-val">3</div><div class="stat-lbl">módulos core</div></div>
+    <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">redes integradas</div></div>
+    <div class="stat"><div class="stat-val">1</div><div class="stat-lbl">dashboard único</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Problema central que resuelve</h2>
+    <p>Las PYMEs con presencia digital activa usan simultáneamente: Meta Business Suite, TikTok Analytics, LinkedIn Analytics, Google Analytics, Canva/herramienta de diseño, chatbot separado y Excel para leads. Esto genera datos fragmentados, pérdida de contexto entre canales y respuestas lentas o inconsistentes al cliente.</p>
+    <p style="margin-top:0.5rem"><strong style="color:var(--color-text-primary)">OmniPresence elimina ese caos</strong> con un único login que consolida las tres capas críticas: ver, publicar y responder.</p>
+  </div>
+
+  <div class="card">
+    <h2>Propuesta de valor única (diferenciadores)</h2>
+    <ul>
+      <li>Bot IA entrenado con el inventario y lógica real del negocio del cliente — no un chatbot genérico</li>
+      <li>Clasificación automática de leads por nivel de intención (frío / tibio / caliente / convertido)</li>
+      <li>Adaptación de assets a todos los formatos en un solo clic (no solo redimensiona — genera variantes optimizadas por plataforma)</li>
+      <li>ROI por canal calculado automáticamente cruzando gasto en pauta con conversiones y leads generados</li>
+      <li>Onboarding rápido: el negocio sube su catálogo y el bot queda entrenado en menos de 1 hora</li>
+      <li>Diseñado para mercado hispanohablante — interfaz, soporte y documentación en español</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Público objetivo</h2>
+    <div class="grid2">
+      <div>
+        <h3>Primario</h3>
+        <ul>
+          <li>PYMEs con 1–50 empleados</li>
+          <li>Tiendas online y comercios físicos con presencia digital</li>
+          <li>Restaurantes, moda, salud & belleza, educación</li>
+          <li>Latam: Bolivia, Perú, Colombia, Argentina, México</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Secundario</h3>
+        <ul>
+          <li>Agencias de marketing digital</li>
+          <li>Community managers freelance</li>
+          <li>Marcas personales e influencers con negocio</li>
+          <li>Startups B2C en etapa de crecimiento</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULO 1 -->
+<div class="section" id="s-m1">
+  <div class="module-header">
+    <div class="mod-icon" style="background:var(--color-background-info)">📊</div>
+    <div>
+      <h2 style="margin:0">Módulo 1 — Analytics Hub</h2>
+      <p style="margin:0;font-size:12px">Métricas unificadas de todas las plataformas en un solo panel</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-blue">
+    <h2>Objetivo</h2>
+    <p>Concentrar en un único dashboard todas las métricas de rendimiento de publicaciones, inversión publicitaria, engagement y conversiones de Facebook, Instagram, TikTok, LinkedIn y sitio web propio, permitiendo comparación entre canales y análisis de ROI en tiempo real.</p>
+  </div>
+
+  <div class="card">
+    <h2>Fuentes de datos y métricas disponibles por plataforma</h2>
+    <table>
+      <tr><th>Plataforma</th><th>Métricas clave</th><th>API disponible</th></tr>
+      <tr><td>Facebook / IG</td><td>Alcance, impresiones, engagement, leads, conversiones, gasto publicitario</td><td class="check">✓ Meta Graph API</td></tr>
+      <tr><td>TikTok</td><td>Vistas, seguidores, likes, comentarios, compartidos, reach</td><td class="check">✓ TikTok Business API</td></tr>
+      <tr><td>LinkedIn</td><td>Impresiones, clics, seguidores, engagement rate, leads (Lead Gen Forms)</td><td class="check">✓ LinkedIn Marketing API</td></tr>
+      <tr><td>Sitio web</td><td>Sesiones, fuente de tráfico, conversiones, tiempo en página, embudo</td><td class="check">✓ GA4 / Pixel / GTM</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Funciones indispensables (MVP)</h2>
+    <ul>
+      <li><span class="badge-required">requerido</span> Dashboard unificado con KPIs principales por canal y totales</li>
+      <li><span class="badge-required">requerido</span> Rendimiento por publicación: alcance, engagement, comentarios, conversiones</li>
+      <li><span class="badge-required">requerido</span> Métricas de inversión publicitaria vs retorno (ROI por campaña)</li>
+      <li><span class="badge-required">requerido</span> Evolución temporal (diario / semanal / mensual) en gráficas comparativas</li>
+      <li><span class="badge-required">requerido</span> Resumen de leads generados por plataforma con origen</li>
+      <li><span class="badge-required">requerido</span> Exportación de reportes en PDF y Excel</li>
+      <li><span class="badge-required">requerido</span> Alertas configurables (caída de engagement, presupuesto agotado)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Funciones opcionales (post-MVP)</h2>
+    <ul>
+      <li><span class="badge-optional">opcional</span> Análisis de sentimiento en comentarios con IA</li>
+      <li><span class="badge-optional">opcional</span> Benchmarking contra competidores (requiere social listening)</li>
+      <li><span class="badge-optional">opcional</span> Predicción de rendimiento de publicaciones con ML</li>
+      <li><span class="badge-optional">opcional</span> Score de contenido por tipo de post (video vs imagen vs carrusel)</li>
+      <li><span class="badge-optional">opcional</span> Heatmap de mejor horario de publicación por canal</li>
+      <li><span class="badge-optional">opcional</span> White-label para agencias (reportes con logo del cliente)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Flujo de datos</h2>
+    <p>OAuth de cada plataforma → jobs de ingesta periódica (cada 4h) → normalización a esquema común → PostgreSQL time-series → agregaciones en caché (Redis) → API REST al frontend → dashboard React con recharts.</p>
+    <p>La sincronización no es en tiempo real para reducir costos de API. Los eventos críticos (ej. comentario con intención de compra) sí activan webhooks inmediatos hacia el Módulo 3.</p>
+  </div>
+</div>
+
+<!-- MODULO 2 -->
+<div class="section" id="s-m2">
+  <div class="module-header">
+    <div class="mod-icon" style="background:var(--color-background-success)">🗂️</div>
+    <div>
+      <h2 style="margin:0">Módulo 2 — Content Hub</h2>
+      <p style="margin:0;font-size:12px">Adaptación y publicación centralizada de contenido multicanal</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-green">
+    <h2>Objetivo</h2>
+    <p>Permitir que el usuario suba un asset (imagen, video, texto) una sola vez y el sistema lo adapte automáticamente a las dimensiones y especificaciones óptimas de cada red social, programando o publicando directamente desde la plataforma. No genera el contenido — lo optimiza y distribuye.</p>
+  </div>
+
+  <div class="card">
+    <h2>Especificaciones de formatos por plataforma</h2>
+    <table>
+      <tr><th>Red</th><th>Feed</th><th>Stories / Shorts</th><th>Miniatura</th></tr>
+      <tr><td>Instagram</td><td>1080×1080 / 1080×1350</td><td>1080×1920</td><td>—</td></tr>
+      <tr><td>Facebook</td><td>1200×630 / 1080×1080</td><td>1080×1920</td><td>—</td></tr>
+      <tr><td>TikTok</td><td>1080×1920 (video)</td><td>1080×1920</td><td>1080×1080</td></tr>
+      <tr><td>LinkedIn</td><td>1200×627 / 1080×1080</td><td>—</td><td>—</td></tr>
+      <tr><td>Web</td><td>Custom (OG image: 1200×630)</td><td>—</td><td>Custom</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Funciones indispensables (MVP)</h2>
+    <ul>
+      <li><span class="badge-required">requerido</span> Upload único de imagen o video — procesamiento automático a todos los formatos seleccionados</li>
+      <li><span class="badge-required">requerido</span> Vista previa de cada variante antes de publicar (editor de posición del crop)</li>
+      <li><span class="badge-required">requerido</span> Programador de publicaciones con calendario visual</li>
+      <li><span class="badge-required">requerido</span> Publicación directa vía API a Facebook, Instagram, LinkedIn</li>
+      <li><span class="badge-required">requerido</span> Editor de texto del caption con variantes por plataforma (distintos hashtags, longitud, emojis)</li>
+      <li><span class="badge-required">requerido</span> Gestión de biblioteca de assets (imágenes, videos, plantillas)</li>
+      <li><span class="badge-required">requerido</span> Historial de publicaciones con estado (publicado / pendiente / fallido)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Funciones opcionales (post-MVP)</h2>
+    <ul>
+      <li><span class="badge-optional">opcional</span> Sugerencia de hashtags por IA según el contenido y la industria</li>
+      <li><span class="badge-optional">opcional</span> Auto-caption con IA (descripción del asset + CTA sugerido)</li>
+      <li><span class="badge-optional">opcional</span> Integración TikTok direct publish (actualmente limitado por API)</li>
+      <li><span class="badge-optional">opcional</span> Templates de marca guardados (paleta, fuentes, watermarks)</li>
+      <li><span class="badge-optional">opcional</span> Publicación en Google Business Profile</li>
+      <li><span class="badge-optional">opcional</span> Compresión inteligente para minimizar pérdida de calidad por resize</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Stack técnico para procesamiento de media</h2>
+    <p>Sharp (Node.js) para procesamiento de imágenes server-side — redimensionado, recorte inteligente con detección de área focal, compresión. FFmpeg para transcoding de video. S3 o R2 para almacenamiento de assets. Jobs en cola (BullMQ + Redis) para procesamiento asíncrono.</p>
+    <p>El crop inteligente usa detección de saliencia (Sharp integra un algoritmo básico; para mayor precisión, integración con Rekognition o Vision API como upgrade opcional).</p>
+  </div>
+</div>
+
+<!-- MODULO 3 -->
+<div class="section" id="s-m3">
+  <div class="module-header">
+    <div class="mod-icon" style="background:var(--color-background-warning)">🤖</div>
+    <div>
+      <h2 style="margin:0">Módulo 3 — AI Bot & Lead Engine</h2>
+      <p style="margin:0;font-size:12px">Automatización de respuestas + clasificación y seguimiento de leads</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-amber">
+    <h2>Objetivo</h2>
+    <p>Desplegar bots de IA por canal (Instagram DMs, Facebook Messenger, WhatsApp, comentarios) entrenados con la lógica del negocio específico: catálogo de productos, precios, políticas, FAQs, inventario. El bot clasifica cada conversación según nivel de intención, registra el lead y traspasa al humano cuando es necesario.</p>
+  </div>
+
+  <div class="card">
+    <h2>Pipeline del bot</h2>
+    <div style="font-size:13px;color:var(--color-text-secondary);line-height:2">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">1</span> Mensaje entrante del usuario en cualquier canal</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">2</span> RAG sobre base de conocimiento del negocio (inventario, FAQs, políticas)</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">3</span> Respuesta personalizada generada por LLM (tono configurable por negocio)</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">4</span> Clasificación del lead: sin interés / curioso / interesado / comprador / cliente recurrente</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">5</span> Registro en CRM interno con historial de conversación y datos del contacto</div>
+      <div style="display:flex;align-items:center;gap:8px"><span style="background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500">6</span> Escalado a humano si la consulta supera el umbral de confianza del bot</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Clasificación de leads y métricas de venta</h2>
+    <table>
+      <tr><th>Estado</th><th>Criterio de clasificación</th><th>Acción automática</th></tr>
+      <tr><td>Frío</td><td>1 mensaje, sin pregunta específica</td><td>Tag, sin alerta</td></tr>
+      <tr><td>Tibio</td><td>Preguntó precio, disponibilidad, características</td><td>Tag + notificación al dueño</td></tr>
+      <tr><td>Caliente</td><td>Expresó intención de compra, pidió formas de pago</td><td>Alerta inmediata + asignación a vendedor</td></tr>
+      <tr><td>Convertido</td><td>Confirmó compra o fue marcado como tal manualmente</td><td>Registro de venta en métricas</td></tr>
+      <tr><td>Perdido</td><td>No respondió en X días o indicó no interés</td><td>Archivado, reactivación programable</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Funciones indispensables (MVP)</h2>
+    <ul>
+      <li><span class="badge-required">requerido</span> Onboarding de knowledge base: carga de catálogo (CSV/PDF), FAQs, política de la empresa</li>
+      <li><span class="badge-required">requerido</span> Bot activo en Instagram DMs y Facebook Messenger vía Meta API</li>
+      <li><span class="badge-required">requerido</span> Inbox unificado: todas las conversaciones de todos los canales en una vista</li>
+      <li><span class="badge-required">requerido</span> Clasificación automática de leads con pipeline visual tipo kanban</li>
+      <li><span class="badge-required">requerido</span> Historial completo de cada conversación con datos del contacto</li>
+      <li><span class="badge-required">requerido</span> Escalado manual: el dueño puede tomar el control de cualquier chat</li>
+      <li><span class="badge-required">requerido</span> Métricas del bot: tasa de respuesta, conversiones, leads por canal, tiempo promedio de respuesta</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Funciones opcionales (post-MVP)</h2>
+    <ul>
+      <li><span class="badge-optional">opcional</span> WhatsApp Business API (requiere cuenta verificada y aprobación Meta)</li>
+      <li><span class="badge-optional">opcional</span> Bot en comentarios de publicaciones (respuesta automática a comentarios)</li>
+      <li><span class="badge-optional">opcional</span> Flujos de seguimiento programados (reactivar lead tibio a los 3 días)</li>
+      <li><span class="badge-optional">opcional</span> Integración con CRM externo (HubSpot, Zoho, Pipedrive)</li>
+      <li><span class="badge-optional">opcional</span> Multi-idioma por mercado configurado</li>
+      <li><span class="badge-optional">opcional</span> Análisis de sentimiento de conversaciones para reportes ejecutivos</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Stack técnico</h2>
+    <p>RAG con embeddings (pgvector en PostgreSQL o Pinecone para escala). LLM: Claude Haiku vía API para respuestas de bajo costo y alta velocidad. Webhooks de Meta para recepción de mensajes. n8n para orquestación de flujos. Node.js / NestJS para el servicio de bot. Redis para sesiones de conversación en curso.</p>
+  </div>
+</div>
+
+<!-- ARQUITECTURA -->
+<div class="section" id="s-arch">
+  <div class="card card-accent-purple">
+    <h2>Arquitectura del sistema</h2>
+    <p>Arquitectura de microservicios desacoplados con un API Gateway central, comunicación por eventos para los flujos críticos (mensajes entrantes, ingestas de métricas) y una base de datos PostgreSQL compartida con schemas separados por módulo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Servicios principales</h2>
+    <table>
+      <tr><th>Servicio</th><th>Responsabilidad</th><th>Stack</th></tr>
+      <tr><td>api-gateway</td><td>Autenticación, rate limiting, routing</td><td>NestJS</td></tr>
+      <tr><td>analytics-service</td><td>Ingesta, normalización y consulta de métricas</td><td>Node.js + BullMQ</td></tr>
+      <tr><td>media-service</td><td>Procesamiento de assets y publicación</td><td>Node.js + Sharp + FFmpeg</td></tr>
+      <tr><td>bot-service</td><td>Recepción de mensajes, RAG, respuestas LLM</td><td>Node.js + pgvector</td></tr>
+      <tr><td>leads-service</td><td>CRM interno, clasificación, pipeline</td><td>NestJS + PostgreSQL</td></tr>
+      <tr><td>notification-service</td><td>Alertas email/push/webhook</td><td>Node.js</td></tr>
+      <tr><td>scheduler</td><td>Jobs periódicos: ingesta de métricas, publicaciones programadas</td><td>BullMQ + Redis</td></tr>
+      <tr><td>frontend</td><td>Dashboard unificado</td><td>Next.js + React</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Modelo de datos core</h2>
+    <div class="grid2">
+      <div>
+        <h3>Entidades principales</h3>
+        <ul>
+          <li>Organization (tenant multi-empresa)</li>
+          <li>SocialAccount (cuenta por red)</li>
+          <li>Post (publicación + variantes)</li>
+          <li>PostMetric (métricas por tiempo)</li>
+          <li>Lead (contacto + historial)</li>
+          <li>Conversation (mensajes del bot)</li>
+          <li>Asset (media en S3/R2)</li>
+          <li>KnowledgeChunk (RAG embeddings)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Principios de diseño</h3>
+        <ul>
+          <li>Multi-tenant: todas las tablas llevan organization_id</li>
+          <li>Time-series para métricas (partición por fecha)</li>
+          <li>Soft delete en leads y conversaciones</li>
+          <li>pgvector para embeddings del bot</li>
+          <li>Auditoría de acciones en tabla events</li>
+          <li>Row-level security en Supabase (o equivalente)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Integraciones externas</h2>
+    <table>
+      <tr><th>Integración</th><th>Propósito</th><th>Costo estimado</th></tr>
+      <tr><td>Meta Graph API</td><td>FB + IG métricas, DMs, publicación</td><td>Gratis (con límites)</td></tr>
+      <tr><td>LinkedIn Marketing API</td><td>Métricas y publicación</td><td>Gratis</td></tr>
+      <tr><td>TikTok Business API</td><td>Métricas (publicación limitada)</td><td>Gratis</td></tr>
+      <tr><td>Google Analytics 4</td><td>Métricas web</td><td>Gratis</td></tr>
+      <tr><td>Claude API (Haiku)</td><td>Bot IA, respuestas</td><td>~$0.25/M tokens input</td></tr>
+      <tr><td>Anthropic Embeddings</td><td>RAG / knowledge base</td><td>~$0.02/M tokens</td></tr>
+      <tr><td>Cloudflare R2</td><td>Storage assets</td><td>$0.015/GB/mes</td></tr>
+      <tr><td>WhatsApp Business (opcional)</td><td>Bot en WhatsApp</td><td>$0.006–0.09/conv.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- COMPETENCIA -->
+<div class="section" id="s-comp">
+  <div class="card card-accent-red">
+    <h2>Estudio de mercado y competencia</h2>
+    <p>El mercado de gestión de redes sociales supera los $17B en 2025. Las soluciones existentes atacan partes del problema pero ninguna integra las tres capas (analytics + content + bot IA con lógica de negocio) en un producto accesible para PYMEs.</p>
+  </div>
+
+  <div class="grid3" style="margin-bottom:1rem">
+    <div class="stat"><div class="stat-val">$99</div><div class="stat-lbl">Hootsuite mínimo/mes</div></div>
+    <div class="stat"><div class="stat-val">$199</div><div class="stat-lbl">Sprout Social mínimo/mes</div></div>
+    <div class="stat"><div class="stat-val">$15</div><div class="stat-lbl">ManyChat bot básico/mes</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Comparativa de soluciones actuales</h2>
+    <div class="comp-row" style="border-bottom:0.5px solid var(--color-border-secondary)">
+      <span class="comp-name" style="color:var(--color-text-secondary);font-weight:400;font-size:11px">Herramienta</span>
+      <span class="comp-price" style="font-size:11px">Precio base</span>
+      <span class="comp-gap" style="font-size:11px">Analytics</span>
+      <span style="min-width:80px;font-size:11px">Content pub.</span>
+      <span style="min-width:80px;font-size:11px">Bot IA</span>
+    </div>
+    <div class="comp-row">
+      <span class="comp-name">Hootsuite</span>
+      <span class="comp-price">$99/mes</span>
+      <span class="comp-gap"><span class="pill pill-in">✓ multi-canal</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ scheduling</span></span>
+      <span style="min-width:80px"><span class="pill pill-out">✗ no tiene</span></span>
+    </div>
+    <div class="comp-row">
+      <span class="comp-name">Sprout Social</span>
+      <span class="comp-price">$199/user/mes</span>
+      <span class="comp-gap"><span class="pill pill-in">✓ avanzado</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ sí</span></span>
+      <span style="min-width:80px"><span class="pill pill-out">✗ no tiene</span></span>
+    </div>
+    <div class="comp-row">
+      <span class="comp-name">ManyChat</span>
+      <span class="comp-price">$15/mes</span>
+      <span class="comp-gap"><span class="pill pill-out">✗ no tiene</span></span>
+      <span style="min-width:80px"><span class="pill pill-out">✗ no tiene</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ solo FB/IG</span></span>
+    </div>
+    <div class="comp-row">
+      <span class="comp-name">Tidio</span>
+      <span class="comp-price">$29/mes</span>
+      <span class="comp-gap"><span class="pill pill-out">✗ no tiene</span></span>
+      <span style="min-width:80px"><span class="pill pill-out">✗ no tiene</span></span>
+      <span style="min-width:80px"><span class="pill pill-part">≈ web + IG</span></span>
+    </div>
+    <div class="comp-row">
+      <span class="comp-name">Buffer</span>
+      <span class="comp-price">$6/mes</span>
+      <span class="comp-gap"><span class="pill pill-part">≈ básico</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ sí</span></span>
+      <span style="min-width:80px"><span class="pill pill-out">✗ no tiene</span></span>
+    </div>
+    <div class="comp-row" style="background:var(--color-background-info)">
+      <span class="comp-name" style="color:var(--color-text-info)">OmniPresence</span>
+      <span class="comp-price" style="color:var(--color-text-info)">$29–89/mes</span>
+      <span class="comp-gap"><span class="pill pill-in">✓ unificado</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ adaptativo</span></span>
+      <span style="min-width:80px"><span class="pill pill-in">✓ negocio IA</span></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Vacíos del mercado que OmniPresence llena</h2>
+    <ul>
+      <li>Ningún competidor combina las tres funciones en un precio accesible para PYMEs</li>
+      <li>Los bots existentes (ManyChat, Tidio) son genéricos — no se entrenan con el catálogo específico del negocio</li>
+      <li>Hootsuite y Sprout Social están orientados a equipos de marketing enterprise, no a dueños de negocio</li>
+      <li>No hay solución en español con soporte para el ecosistema Latam (integraciones locales, moneda, PYME-first UX)</li>
+      <li>La clasificación automática de leads con nivel de intención no existe en ningún competidor como feature nativo</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Posicionamiento de precio</h2>
+    <p>Target: posicionarse entre Buffer (muy básico) y Hootsuite (caro y complejo). Precio justo para el valor entregado en Latam: $29–89/mes dependiendo del plan, con diferenciación por número de canales conectados, volumen de mensajes bot y número de usuarios del equipo.</p>
+  </div>
+</div>
+
+<!-- NEGOCIO -->
+<div class="section" id="s-biz">
+  <div class="card card-accent-green">
+    <h2>Modelo de negocio SaaS</h2>
+    <p>Suscripción mensual con tres tiers. Sin contrato anual obligatorio. Modelo freemium para adquisición (límites generosos en free para que el negocio vea valor antes de pagar).</p>
+  </div>
+
+  <div class="card">
+    <h2>Planes propuestos</h2>
+    <table>
+      <tr><th>Plan</th><th>Precio/mes</th><th>Límites</th><th>Target</th></tr>
+      <tr><td>Starter (Free)</td><td>$0</td><td>2 canales, 30 posts/mes, 100 conv. bot/mes</td><td>Prueba y adquisición</td></tr>
+      <tr><td>Pro</td><td>$29</td><td>5 canales, posts ilimitados, 1,000 conv. bot/mes, 1 usuario</td><td>PYME individual</td></tr>
+      <tr><td>Business</td><td>$59</td><td>Todos los canales, ilimitado, 5,000 conv. bot/mes, 3 usuarios, white-label reportes</td><td>PYMEs con equipo</td></tr>
+      <tr><td>Agency</td><td>$89</td><td>Multi-cliente, 10 usuarios, API access, soporte prioritario</td><td>Agencias de marketing</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Unit economics proyectados</h2>
+    <div class="grid3">
+      <div class="stat"><div class="stat-val">~$8</div><div class="stat-lbl">COGS estimado/cliente Pro</div></div>
+      <div class="stat"><div class="stat-val">~$21</div><div class="stat-lbl">Margen bruto/cliente Pro</div></div>
+      <div class="stat"><div class="stat-val">>70%</div><div class="stat-lbl">Margen bruto objetivo</div></div>
+    </div>
+    <p style="margin-top:0.75rem;font-size:12px">COGS incluye: LLM API calls (~$3–5), storage (~$1), infraestructura (~$2). Escala favorablemente con volumen.</p>
+  </div>
+
+  <div class="card">
+    <h2>Estrategia de adquisición</h2>
+    <ul>
+      <li>SEO + contenido en español orientado a "cómo gestionar redes sociales para mi negocio"</li>
+      <li>Directorio de herramientas para PYMEs en Latam (ProductHunt en español, comunidades de emprendedores)</li>
+      <li>Partnership con agencias de marketing digital que revenden el plan Agency</li>
+      <li>Caso de estudio con negocios bolivianos / colombianos como prueba social inicial</li>
+      <li>Onboarding gamificado: conecta 1 canal → ve tus primeras métricas → activa el bot en 10 minutos</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Métricas SaaS a monitorear</h2>
+    <div class="grid2">
+      <ul>
+        <li>MRR y ARR</li>
+        <li>Churn mensual (objetivo &lt;3%)</li>
+        <li>Trial-to-paid conversion (&gt;15%)</li>
+        <li>CAC (costo de adquisición)</li>
+      </ul>
+      <ul>
+        <li>LTV / CAC ratio (&gt;3x)</li>
+        <li>NPS por segmento</li>
+        <li>Activación: % que conecta 2+ canales</li>
+        <li>Bot engagement rate por cliente</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="section" id="s-road">
+  <div class="card card-accent-blue">
+    <h2>Roadmap de desarrollo</h2>
+    <p>4 fases de 8 semanas cada una. Prioridad: llegar al mercado con el MVP funcional lo antes posible, validar retención y ampliar basado en feedback real.</p>
+  </div>
+
+  <div class="card">
+    <h2>Fase 1 — Fundación (sem. 1–8)</h2>
+    <div class="roadmap-row">
+      <span class="phase-label">Auth & Core</span>
+      <div class="phase-items">
+        <div class="phase-item">Multi-tenant auth (JWT + OAuth), onboarding de organización, planes de suscripción</div>
+        <div class="phase-item">Conexión OAuth Facebook + Instagram, ingesta inicial de métricas</div>
+      </div>
+    </div>
+    <div class="roadmap-row">
+      <span class="phase-label">Módulo 1</span>
+      <div class="phase-items">
+        <div class="phase-item">Dashboard básico con métricas de FB/IG: alcance, engagement, followers, posts top</div>
+      </div>
+    </div>
+    <div class="roadmap-row">
+      <span class="phase-label">Infra</span>
+      <div class="phase-items">
+        <div class="phase-item">PostgreSQL + Redis + BullMQ, Docker Compose, CI/CD básico, staging environment</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Fase 2 — Contenido & Más Canales (sem. 9–16)</h2>
+    <div class="roadmap-row">
+      <span class="phase-label">Módulo 2</span>
+      <div class="phase-items">
+        <div class="phase-item">Upload de assets, procesamiento Sharp, generación de variantes por plataforma</div>
+        <div class="phase-item">Scheduler de publicaciones, publicación directa FB/IG/LinkedIn, historial</div>
+      </div>
+    </div>
+    <div class="roadmap-row">
+      <span class="phase-label">Analytics+</span>
+      <div class="phase-items">
+        <div class="phase-item">LinkedIn + TikTok analytics, gráficas comparativas multi-canal, exportación PDF</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Fase 3 — Bot IA MVP (sem. 17–24)</h2>
+    <div class="roadmap-row">
+      <span class="phase-label">Módulo 3</span>
+      <div class="phase-items">
+        <div class="phase-item">Onboarding knowledge base (upload CSV/PDF + chunking + embeddings pgvector)</div>
+        <div class="phase-item">Bot activo en Instagram DMs + Facebook Messenger vía webhooks</div>
+        <div class="phase-item">Inbox unificado con historial, clasificación de leads, pipeline kanban</div>
+        <div class="phase-item">Alertas de leads calientes, escalado manual a humano</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Fase 4 — Growth & Polish (sem. 25–32)</h2>
+    <div class="roadmap-row">
+      <span class="phase-label">Producto</span>
+      <div class="phase-items">
+        <div class="phase-item">WhatsApp Business API, flujos de seguimiento automatizados de leads</div>
+        <div class="phase-item">White-label para agencias, multi-cliente dashboard, API pública v1</div>
+        <div class="phase-item">Optimización de performance, reducción de costos LLM, caching de respuestas</div>
+      </div>
+    </div>
+    <div class="roadmap-row">
+      <span class="phase-label">Negocio</span>
+      <div class="phase-items">
+        <div class="phase-item">Landing page + documentación + onboarding gamificado, primeros 100 clientes pagos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FUTURO -->
+<div class="section" id="s-future">
+  <div class="card card-accent-purple">
+    <h2>Guía de mejoras futuras</h2>
+    <p>Roadmap de evolución del producto más allá del v1.0, ordenado por impacto y complejidad.</p>
+  </div>
+
+  <div class="card">
+    <h2>Nivel 1 — Alto impacto, bajo esfuerzo (meses 9–12)</h2>
+    <ul>
+      <li>IA generativa para sugerencia de captions y hashtags basada en el estilo de la marca</li>
+      <li>Análisis de mejor horario de publicación por canal con heatmap</li>
+      <li>Integración con Google Business Profile para reseñas y posts</li>
+      <li>Notificaciones push móvil (PWA) para alertas de leads calientes</li>
+      <li>Dashboard de comparación competitiva básica (seguimiento de páginas de competidores)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Nivel 2 — Expansión de plataforma (año 2)</h2>
+    <ul>
+      <li>App móvil nativa (Flutter) para gestión desde el celular</li>
+      <li>Integración con e-commerce: Shopify, WooCommerce — sincronizar catálogo automáticamente con el bot</li>
+      <li>Social listening: monitoreo de menciones de la marca y keywords del sector</li>
+      <li>Módulo de publicidad pagada: gestión de campañas Meta Ads y Google Ads desde la plataforma</li>
+      <li>CRM avanzado con pipeline de ventas, seguimiento de oportunidades y email automatizado</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Nivel 3 — Diferenciación avanzada (año 2–3)</h2>
+    <ul>
+      <li>Generación de imágenes con IA (Stable Diffusion local o DALL-E API) directo desde el Content Hub</li>
+      <li>Análisis predictivo de tendencias de contenido en el nicho del negocio</li>
+      <li>Voice bot para atención por llamada (integración con Twilio + Whisper)</li>
+      <li>Marketplace de agentes especializados: un bot de ventas, uno de soporte, uno de cobranzas</li>
+      <li>API pública completa para que agencias construyan sus propias integraciones sobre OmniPresence</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Riesgos a monitorear</h2>
+    <ul>
+      <li>Cambios en las APIs de Meta (Facebook/Instagram) — historial de restricciones que afectan herramientas de terceros</li>
+      <li>Aumento de costo de LLMs si el volumen de conversaciones crece sin optimización de caché</li>
+      <li>Saturación del mercado: Buffer, Hootsuite y nuevos entrantes pueden bajar precios o agregar bots</li>
+      <li>Dificultad de aprobación como Meta Business Partner para acceso a APIs avanzadas</li>
+      <li>Churn alto si el onboarding del bot IA es complejo para negocios sin perfil técnico</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Indicadores de éxito del producto</h2>
+    <div class="grid2">
+      <ul>
+        <li>100 clientes pagos en mes 8</li>
+        <li>NPS &gt; 50 en segmento PYME</li>
+        <li>Churn &lt; 3% mensual</li>
+        <li>60% activan los 3 módulos</li>
+      </ul>
+      <ul>
+        <li>MRR $5,000 al final de fase 4</li>
+        <li>ROI demostrable para el cliente</li>
+        <li>&gt;30% leads via referidos</li>
+        <li>1,000 conv. bot/día en toda la base</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  const btns=document.querySelectorAll('.nav button');
+  const map={vision:0,m1:1,m2:2,m3:3,arch:4,comp:5,biz:6,road:7,future:8};
+  if(btns[map[id]])btns[map[id]].classList.add('active');
+}
+</script>
