@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#464554",
+                    "tertiary-fixed": "#ffdadb",
+                    "surface-container-high": "#1c2b3c",
+                    "background": "#051424",
+                    "on-background": "#d4e4fa",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#07006c",
+                    "inverse-surface": "#d4e4fa",
+                    "tertiary-fixed-dim": "#ffb2b7",
+                    "outline": "#908fa0",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-fixed": "#40000d",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "primary-fixed": "#e1e0ff",
+                    "surface-dim": "#051424",
+                    "secondary": "#4edea3",
+                    "on-tertiary": "#67001b",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-container-low": "#0d1c2d",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#00a572",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "primary": "#c0c1ff",
+                    "on-secondary-container": "#00311f",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-container": "#0d0096",
+                    "on-secondary": "#003824",
+                    "on-tertiary-fixed-variant": "#92002a",
+                    "on-secondary-fixed": "#002113",
+                    "surface": "#051424",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-tint": "#c0c1ff",
+                    "surface-container": "#122131",
+                    "surface-container-highest": "#273647",
+                    "primary-container": "#8083ff",
+                    "on-surface-variant": "#c7c4d7",
+                    "tertiary": "#ffb2b7",
+                    "error": "#ffb4ab",
+                    "surface-variant": "#273647",
+                    "on-surface": "#d4e4fa",
+                    "on-tertiary-container": "#5b0017",
+                    "inverse-primary": "#494bd6",
+                    "surface-bright": "#2c3a4c",
+                    "on-primary": "#1000a9",
+                    "inverse-on-surface": "#233143",
+                    "tertiary-container": "#ff516a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "40px",
+                    "md": "16px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "max_width": "1440px",
+                    "lg": "24px",
+                    "margin": "32px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Space Grotesk"],
+                    "headline-md": ["Space Grotesk"],
+                    "headline-lg": ["Space Grotesk"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "data-mono": ["Space Grotesk"],
+                    "display-xl": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "data-mono": ["14px", {"lineHeight": "1", "letterSpacing": "0", "fontWeight": "500"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+        .kanban-column {
+            min-width: 300px;
+            max-width: 300px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #051424;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #464554;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-on-primary overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-slate-900/80 backdrop-blur-xl font-sans text-sm font-medium tracking-tight docked full-width top-0 z-50 border-b border-slate-800 shadow-lg shadow-indigo-500/5 flex justify-between items-center px-8 h-16 w-full fixed">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-white uppercase">OmniPresence Suite</span>
+<div class="hidden md:flex gap-6 items-center">
+<nav class="flex gap-6">
+<a class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors cursor-pointer group">Analytics Hub</a>
+<a class="bg-indigo-500/10 text-indigo-400 border-r-2 border-indigo-500 flex items-center px-6 py-3 w-full cursor-pointer group">Lead Engine</a>
+<a class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors cursor-pointer group">AI Bot Engine</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-slate-800/50 rounded-lg px-3 py-1.5 border border-slate-700">
+<span class="material-symbols-outlined text-slate-400 text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none outline-none text-xs text-white w-48 placeholder:text-slate-500" placeholder="Search leads..." type="text"/>
+</div>
+<button class="hover:bg-slate-800/50 transition-all duration-200 active:scale-95 cursor-pointer p-2 rounded-lg">
+<span class="material-symbols-outlined text-slate-400" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-indigo-500/30">
+<img alt="User profile" data-alt="Close-up professional portrait of a tech executive in a dark slate studio setting. The lighting is dramatic and cinematic, highlighting sophisticated features. The overall mood is authoritative and precise, perfectly aligned with a high-end data analytics command center aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMFvTxSQ0nni67XkTdIRRJVoFf9UaSXu-p1QRF2s87As9D9vsFLcW2TS1NwvPv1miJowTKQaJXBYxbEVhDdXGocn4tJEhnrZczkaE3YGaCpZ1LLp7w3nzHg2J_eapQsuPyjlK8zSIR3b0y9evNUEv_2bW2aJPkz-Ci_M62eQEKTH30-zqSndRN-JXAAYbeyp4Xa_ws7deGmO2h_z0KRTPHyuymtsQaIu4lHPIuIvCNCd7HRBDHWFBCeFa-iYoIyXF1juoyy1Sdlg"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 border-r border-slate-800 fixed left-0 top-0 z-40 bg-slate-900 hidden lg:flex flex-col pt-20 pb-8">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<div>
+<p class="font-headline-md text-sm text-white">Acme Corp</p>
+<p class="font-body-sm text-[10px] text-slate-500 uppercase tracking-widest">Admin Account</p>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<div class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="monitoring">monitoring</span>
+<span class="font-label-caps uppercase">Analytics Hub</span>
+</div>
+<div class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="perm_media">perm_media</span>
+<span class="font-label-caps uppercase">Content Hub</span>
+</div>
+<div class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-caps uppercase">AI Bot Engine</span>
+</div>
+<div class="bg-indigo-500/10 text-indigo-400 border-r-2 border-indigo-500 flex items-center px-6 py-3 w-full cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps uppercase">Lead Engine</span>
+</div>
+</div>
+<div class="px-6 mt-auto">
+<button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-label-caps py-3 rounded text-[10px] transition-all">
+                Upgrade Plan
+            </button>
+<div class="mt-6 space-y-1">
+<div class="text-slate-500 flex items-center py-2 w-full hover:text-indigo-300 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="help">help</span>
+<span class="font-label-caps text-[10px] uppercase">Help Center</span>
+</div>
+<div class="text-slate-500 flex items-center py-2 w-full hover:text-error transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="logout">logout</span>
+<span class="font-label-caps text-[10px] uppercase">Log Out</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 lg:pl-64 pt-16 flex flex-col overflow-hidden">
+<!-- Dashboard Header -->
+<div class="px-margin py-lg border-b border-outline-variant flex flex-col md:flex-row md:items-end justify-between gap-lg">
+<div>
+<h1 class="font-headline-lg text-on-surface">Social Leads Pipeline</h1>
+<p class="font-body-md text-on-surface-variant mt-1">Real-time conversion tracking across multi-channel social signals.</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex -space-x-2">
+<div class="h-8 w-8 rounded-full border-2 border-background bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="h-8 w-8 rounded-full border-2 border-background bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container">AM</div>
+<div class="h-8 w-8 rounded-full border-2 border-background bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">+3</div>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-2 px-md py-2 border border-outline text-on-surface font-label-caps rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="ios_share">ios_share</span>
+                        Export
+                    </button>
+<button class="flex items-center gap-2 px-md py-2 bg-primary text-on-primary font-label-caps rounded-lg hover:shadow-lg hover:shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        New Lead
+                    </button>
+</div>
+</div>
+</div>
+<!-- Metrics Bar -->
+<div class="px-margin py-md grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-gutter bg-surface-container-low/30">
+<div class="glass-panel p-md rounded-xl">
+<p class="font-label-caps text-on-surface-variant text-[10px] uppercase">Active Leads</p>
+<div class="flex items-end justify-between mt-xs">
+<p class="font-display-xl text-3xl leading-none">1,284</p>
+<span class="text-secondary font-data-mono text-xs flex items-center">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_up">trending_up</span>
+                        12%
+                    </span>
+</div>
+</div>
+<div class="glass-panel p-md rounded-xl">
+<p class="font-label-caps text-on-surface-variant text-[10px] uppercase">Avg. Intent Score</p>
+<div class="flex items-end justify-between mt-xs">
+<p class="font-display-xl text-3xl leading-none">78<span class="text-lg text-outline">/100</span></p>
+<span class="text-secondary font-data-mono text-xs flex items-center">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="arrow_upward">arrow_upward</span>
+                        4pt
+                    </span>
+</div>
+</div>
+<div class="glass-panel p-md rounded-xl">
+<p class="font-label-caps text-on-surface-variant text-[10px] uppercase">Conversion Rate</p>
+<div class="flex items-end justify-between mt-xs">
+<p class="font-display-xl text-3xl leading-none">24.2%</p>
+<span class="text-error font-data-mono text-xs flex items-center">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_down">trending_down</span>
+                        1.5%
+                    </span>
+</div>
+</div>
+<div class="glass-panel p-md rounded-xl">
+<p class="font-label-caps text-on-surface-variant text-[10px] uppercase">Total Value</p>
+<div class="flex items-end justify-between mt-xs">
+<p class="font-display-xl text-3xl leading-none">$42.8k</p>
+<span class="text-secondary font-data-mono text-xs flex items-center">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_up">trending_up</span>
+                        $8k
+                    </span>
+</div>
+</div>
+<div class="hidden lg:block glass-panel p-md rounded-xl">
+<p class="font-label-caps text-on-surface-variant text-[10px] uppercase">Avg. Response Time</p>
+<div class="flex items-end justify-between mt-xs">
+<p class="font-display-xl text-3xl leading-none">14m</p>
+<span class="text-secondary font-data-mono text-xs flex items-center">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="bolt">bolt</span>
+                        -2m
+                    </span>
+</div>
+</div>
+</div>
+<!-- Kanban Board Area -->
+<div class="flex-1 overflow-x-auto p-margin custom-scrollbar">
+<div class="flex gap-gutter h-full">
+<!-- Cold Column -->
+<div class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<h3 class="font-headline-md text-sm uppercase tracking-wider">Cold</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold">14</span>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex-1 space-y-md overflow-y-auto custom-scrollbar pr-1">
+<!-- Card 1 -->
+<div class="glass-panel p-md rounded-xl cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors group">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg overflow-hidden border border-outline-variant">
+<img alt="Lead" data-alt="Close-up portrait of a young professional man against a dark teal background. Soft studio lighting highlights sharp facial features and professional attire. The image style is polished and high-end, representing a lead in a corporate CRM environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCBRpl-EAEVAWCut1a71wdtaXb6P2inI9PMHzbFUxstywMMwFRnmtOgOoo7vfOy8C6Yrh6pyOgCRLgA91zcGJ4yuH21RQM2iJsstKY0XTrGjqavr1unjNFx6a6tBAwB9seo4-9ReLIHCJEHlXD5yqhBb9UwyJd_ompnHZMN3sud9Z5_kUJkbmtdQLflh3DVM4sgIHVRzjHJ-WPinPDAugL89JBMQ2oIeLIvLIZRLF-_aRQMc4mlHjzuASCeLyAOTXSr-DjShIEaA"/>
+</div>
+<div>
+<p class="font-body-md font-semibold text-xs text-white">Marcus Thorne</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant">@mthorne_ux</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-sm text-indigo-400" data-icon="language">language</span>
+</div>
+<div class="flex items-center justify-between mt-md pt-md border-t border-outline-variant/30">
+<div class="flex items-center gap-1">
+<span class="font-label-caps text-[9px] text-outline uppercase">Intent</span>
+<span class="font-data-mono text-xs text-white">32%</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px] text-outline" data-icon="schedule">schedule</span>
+<span class="font-data-mono text-[10px] text-outline">2h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Warm Column -->
+<div class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<h3 class="font-headline-md text-sm uppercase tracking-wider">Warm</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold">28</span>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex-1 space-y-md overflow-y-auto custom-scrollbar pr-1">
+<!-- Card 2 -->
+<div class="glass-panel p-md rounded-xl cursor-grab border-l-2 border-l-primary-container">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg overflow-hidden border border-outline-variant">
+<img alt="Lead" data-alt="Studio portrait of a smiling female entrepreneur in professional attire, lit by warm, sophisticated directional light. The background is a deep, textured navy blue, creating a high-contrast and premium look that fits the modern corporate dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLPk7pk__jhFJeu1wLt1jtbSctazUHrZ-XTBMdFzyaY9TeFh3FHx-sMWQZNJh6FC94PzV62A4mnFnvBPujyROJi9m3lU1TxCTmaguQjgR5tk3lJC2eDjX0PTL1Zf8uCobPYS8t3jF8ctnnOc-M7us6HRu4B6B4s5mRF5xV7CUuYuGWj-S6S7yGPrzfYflr6kWyLKvVIsj3fhZRhL05iKYv4XkL8LrJWpyJHCueNenWioDhwrPYmdqcOKKXlRI4JbR1viG1ADReuw"/>
+</div>
+<div>
+<p class="font-body-md font-semibold text-xs text-white">Elena Rodriguez</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant">LinkedIn Signal</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-sm text-blue-400" data-icon="hub">hub</span>
+</div>
+<div class="flex items-center justify-between mt-md pt-md border-t border-outline-variant/30">
+<div class="flex items-center gap-1">
+<span class="font-label-caps text-[9px] text-outline uppercase">Intent</span>
+<span class="font-data-mono text-xs text-primary">64%</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px] text-outline" data-icon="schedule">schedule</span>
+<span class="font-data-mono text-[10px] text-outline">45m ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Hot Column -->
+<div class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<h3 class="font-headline-md text-sm uppercase tracking-wider">Hot</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold">8</span>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex-1 space-y-md overflow-y-auto custom-scrollbar pr-1">
+<!-- Card 3 -->
+<div class="glass-panel p-md rounded-xl cursor-grab border-l-2 border-l-tertiary-container shadow-xl shadow-tertiary-container/5">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg overflow-hidden border border-outline-variant">
+<img alt="Lead" data-alt="High-resolution portrait of a startup founder in a modern office environment with soft bokeh lights in the background. The color palette is composed of cool grays and sharp slate tones, with a premium and authoritative feel suitable for a CRM system's high-intent lead card." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD5ZKiRght4bomlnrwpnNNF2VEHy_LJIjndb_J0SQXYzbtWimK30vZmxIN7BH9PWPR62vFlNKJewjNNL_Ng9Pi-GFaW5PwLX54l6Wqhkn6oyNPe10TfSr0aDoLx0RlkQKE8LfRXFSKKqISOnD-TDM6T__nsSmXjmWZ6DhXitaw-s_iPgPejQgJeH7RVygrOoT3iKkBnVrrEnLrBvGS5BC7hT82WEjYaLiTYj4z3cowJ-Ai2gR4ciNYINfHbTApgHlm4USAfGtcMQ"/>
+</div>
+<div>
+<p class="font-body-md font-semibold text-xs text-white">David Kim</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant">X / Twitter</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-sm text-white" data-icon="close">close</span>
+</div>
+<div class="mt-sm">
+<span class="bg-tertiary-container/20 text-tertiary text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">High Intent</span>
+</div>
+<div class="flex items-center justify-between mt-md pt-md border-t border-outline-variant/30">
+<div class="flex items-center gap-1">
+<span class="font-label-caps text-[9px] text-outline uppercase">Intent</span>
+<span class="font-data-mono text-xs text-tertiary">92%</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px] text-outline" data-icon="schedule">schedule</span>
+<span class="font-data-mono text-[10px] text-outline">12m ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Converted Column -->
+<div class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<h3 class="font-headline-md text-sm uppercase tracking-wider">Converted</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold">156</span>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex-1 space-y-md overflow-y-auto custom-scrollbar pr-1">
+<div class="glass-panel p-md rounded-xl bg-secondary/5 border-secondary/20">
+<div class="flex items-center gap-2 opacity-60">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-body-md font-semibold text-xs text-white">Sarah Jenkins</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant">Closed $12,400</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Lost Column -->
+<div class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<h3 class="font-headline-md text-sm uppercase tracking-wider">Lost</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold">42</span>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex-1 border-2 border-dashed border-outline-variant/30 rounded-xl flex items-center justify-center p-xl">
+<div class="text-center">
+<span class="material-symbols-outlined text-outline-variant text-4xl" data-icon="archive">archive</span>
+<p class="font-label-caps text-outline-variant mt-sm">Archived</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-margin right-margin h-14 w-14 rounded-full bg-primary text-on-primary shadow-xl shadow-primary/30 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 lg:hidden">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</body></html>

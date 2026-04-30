@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+      backdrop-filter: blur(12px);
+      background: rgba(30, 41, 59, 0.8);
+      border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+    .inner-glow {
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#464554",
+            "tertiary-fixed": "#ffdadb",
+            "surface-container-high": "#1c2b3c",
+            "background": "#051424",
+            "on-background": "#d4e4fa",
+            "on-error": "#690005",
+            "on-primary-fixed": "#07006c",
+            "inverse-surface": "#d4e4fa",
+            "tertiary-fixed-dim": "#ffb2b7",
+            "outline": "#908fa0",
+            "on-secondary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#40000d",
+            "primary-fixed-dim": "#c0c1ff",
+            "primary-fixed": "#e1e0ff",
+            "surface-dim": "#051424",
+            "secondary": "#4edea3",
+            "on-tertiary": "#67001b",
+            "surface-container-lowest": "#010f1f",
+            "surface-container-low": "#0d1c2d",
+            "on-error-container": "#ffdad6",
+            "secondary-container": "#00a572",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "primary": "#c0c1ff",
+            "on-secondary-container": "#00311f",
+            "secondary-fixed": "#6ffbbe",
+            "on-primary-container": "#0d0096",
+            "on-secondary": "#003824",
+            "on-tertiary-fixed-variant": "#92002a",
+            "on-secondary-fixed": "#002113",
+            "surface": "#051424",
+            "error-container": "#93000a",
+            "secondary-fixed-dim": "#4edea3",
+            "surface-tint": "#c0c1ff",
+            "surface-container": "#122131",
+            "surface-container-highest": "#273647",
+            "primary-container": "#8083ff",
+            "on-surface-variant": "#c7c4d7",
+            "tertiary": "#ffb2b7",
+            "error": "#ffb4ab",
+            "surface-variant": "#273647",
+            "on-surface": "#d4e4fa",
+            "on-tertiary-container": "#5b0017",
+            "inverse-primary": "#494bd6",
+            "surface-bright": "#2c3a4c",
+            "on-primary": "#1000a9",
+            "inverse-on-surface": "#233143",
+            "tertiary-container": "#ff516a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "label-caps": ["Space Grotesk"],
+            "headline-md": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "data-mono": ["Space Grotesk"],
+            "display-xl": ["Space Grotesk"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-slate-900/80 backdrop-blur-xl font-sans text-sm font-medium tracking-tight docked full-width top-0 z-50 border-b border-slate-800 shadow-lg shadow-indigo-500/5 flex justify-between items-center px-8 h-16 w-full fixed">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-white uppercase">OmniPresence Suite</span>
+<div class="hidden md:flex gap-6 items-center">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="bg-slate-800/50 border-none rounded-lg pl-10 pr-4 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500 w-64 transition-all" placeholder="Search analytics..." type="text"/>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:brightness-110 active:scale-95 transition-all">New Post</button>
+<div class="flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-lg text-slate-300">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span class="text-xs">Jan 1 - Jan 31</span>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined p-2 hover:bg-slate-800/50 rounded-full cursor-pointer transition-all" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined p-2 hover:bg-slate-800/50 rounded-full cursor-pointer transition-all" data-icon="settings">settings</span>
+</div>
+<div class="w-8 h-8 rounded-full border border-slate-700 overflow-hidden bg-slate-800">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional studio headshot of a data analyst in their early 30s, featuring soft cinematic lighting against a dark navy background. The individual wears a minimal charcoal turtleneck, conveying a sense of expertise and technical focus. The image style is clean, modern, and follows a premium corporate aesthetic with high-end photography standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp0WTL5z9_tawwXIdraPEZf-m29RhMJYDY0bO8eoJkzxfL543epqeb4DEZUQpXzFqtNv9vD7LCpemWUEKJ4kFEe4SPSmtZ_jwbotdwBXl8xznFY3-UlzYDb_Z8CdSAuGb6WuH2xvtFd99dka5e96jOd2j95xil4M8RbiJNKI3RHrFcJ_BgcS-8ZSNdsMWp-hU0U8FdgCfx7N0tiPZo0tDUx9lxDScbqf6vncNX5_Q1sbg-2qaWFJQu-XA5HhHgMBxmMTJdvB9Rkg"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="bg-slate-900 h-screen w-64 border-r fixed left-0 top-0 z-40 border-slate-800 flex flex-col pt-20 pb-8 h-full hidden md:flex">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center border border-indigo-500/30">
+<span class="material-symbols-outlined text-indigo-400">account_balance</span>
+</div>
+<div>
+<h3 class="text-on-surface font-headline-md text-sm">Acme Corp</h3>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Admin Account</p>
+</div>
+</div>
+<nav class="flex-1">
+<div class="bg-indigo-500/10 text-indigo-400 border-r-2 border-indigo-500 flex items-center px-6 py-3 w-full cursor-pointer group">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="monitoring">monitoring</span>
+<span class="font-sans text-xs font-bold uppercase tracking-widest">Analytics Hub</span>
+</div>
+<div class="text-slate-500 flex items-center px-6 py-3 w-full cursor-pointer group hover:bg-slate-800/80 hover:text-indigo-300 transition-colors">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="perm_media">perm_media</span>
+<span class="font-sans text-xs font-bold uppercase tracking-widest">Content Hub</span>
+</div>
+<div class="text-slate-500 flex items-center px-6 py-3 w-full cursor-pointer group hover:bg-slate-800/80 hover:text-indigo-300 transition-colors">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="smart_toy">smart_toy</span>
+<span class="font-sans text-xs font-bold uppercase tracking-widest">AI Bot Engine</span>
+</div>
+<div class="text-slate-500 flex items-center px-6 py-3 w-full cursor-pointer group hover:bg-slate-800/80 hover:text-indigo-300 transition-colors">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="leaderboard">leaderboard</span>
+<span class="font-sans text-xs font-bold uppercase tracking-widest">Lead Engine</span>
+</div>
+</nav>
+<div class="px-6 mt-auto space-y-4">
+<button class="w-full bg-slate-800 border border-slate-700 text-indigo-400 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-slate-700 transition-all">Upgrade Plan</button>
+<div class="space-y-2">
+<div class="text-slate-500 flex items-center py-1 w-full cursor-pointer hover:text-slate-300 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="help">help</span>
+          Help Center
+        </div>
+<div class="text-slate-500 flex items-center py-1 w-full cursor-pointer hover:text-error text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="logout">logout</span>
+          Log Out
+        </div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:pl-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1440px] mx-auto space-y-8">
+<!-- Header & Global Filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline-lg text-on-surface text-3xl">Analytics Hub</h1>
+<p class="text-on-surface-variant font-body-sm mt-1">Global performance overview across integrated advertising platforms.</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="bg-surface-container rounded-lg p-1 flex border border-outline-variant">
+<button class="px-4 py-1.5 rounded text-xs font-label-caps bg-indigo-500 text-white">ALL</button>
+<button class="px-4 py-1.5 rounded text-xs font-label-caps text-on-surface-variant hover:text-white transition-colors">FB</button>
+<button class="px-4 py-1.5 rounded text-xs font-label-caps text-on-surface-variant hover:text-white transition-colors">IG</button>
+<button class="px-4 py-1.5 rounded text-xs font-label-caps text-on-surface-variant hover:text-white transition-colors">TikTok</button>
+<button class="px-4 py-1.5 rounded text-xs font-label-caps text-on-surface-variant hover:text-white transition-colors">LI</button>
+</div>
+<button class="flex items-center gap-2 bg-surface-container border border-outline-variant px-4 py-2 rounded-lg text-xs font-label-caps text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+            ADVANCED FILTERS
+          </button>
+</div>
+</div>
+<!-- Key Metrics Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="glass-card inner-glow p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<p class="font-label-caps text-on-surface-variant">TOTAL IMPRESSIONS</p>
+<span class="material-symbols-outlined text-indigo-400" data-icon="visibility">visibility</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-data-mono text-headline-lg text-on-surface">1,284,902</span>
+<span class="text-secondary text-xs font-bold">+12.4%</span>
+</div>
+<div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 w-[72%]"></div>
+</div>
+</div>
+<div class="glass-card inner-glow p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<p class="font-label-caps text-on-surface-variant">TOTAL SPEND</p>
+<span class="material-symbols-outlined text-indigo-400" data-icon="payments">payments</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-data-mono text-headline-lg text-on-surface">$12,450.00</span>
+<span class="text-on-surface-variant text-xs font-bold">Target: $15k</span>
+</div>
+<div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 w-[83%]"></div>
+</div>
+</div>
+<div class="glass-card inner-glow p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<p class="font-label-caps text-on-surface-variant">AVERAGE ROAS</p>
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-data-mono text-headline-lg text-on-surface">4.2x</span>
+<span class="text-secondary text-xs font-bold">+0.8%</span>
+</div>
+<div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[65%]"></div>
+</div>
+</div>
+<div class="glass-card inner-glow p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<p class="font-label-caps text-on-surface-variant">NEW FOLLOWERS</p>
+<span class="material-symbols-outlined text-indigo-400" data-icon="person_add">person_add</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-data-mono text-headline-lg text-on-surface">8,431</span>
+<span class="text-secondary text-xs font-bold">+18.2%</span>
+</div>
+<div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 w-[45%]"></div>
+</div>
+</div>
+</div>
+<!-- Comparative Chart & Distribution (Bento Layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="lg:col-span-2 glass-card inner-glow rounded-xl p-6">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline-md text-lg">Performance Trends</h2>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-indigo-500"></div>
+<span class="text-xs font-label-caps text-on-surface-variant">Current Period</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-slate-700"></div>
+<span class="text-xs font-label-caps text-on-surface-variant">Previous Period</span>
+</div>
+</div>
+</div>
+<div class="h-[300px] w-full flex items-end justify-between gap-2 px-2">
+<!-- Simulated Chart Bars -->
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[40%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">01 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[65%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">05 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[55%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">10 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[85%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">15 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[70%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">20 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[95%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">25 Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group gap-2">
+<div class="w-full bg-indigo-500/20 rounded-t-sm h-[75%] group-hover:bg-indigo-500 transition-colors"></div>
+<span class="text-[10px] font-data-mono text-on-surface-variant">30 Jan</span>
+</div>
+</div>
+</div>
+<div class="glass-card inner-glow rounded-xl p-6 flex flex-col">
+<h2 class="font-headline-md text-lg mb-6">Channel Distribution</h2>
+<div class="flex-1 flex flex-col justify-center space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-label-caps">
+<span>META (FB/IG)</span>
+<span>45%</span>
+</div>
+<div class="h-2 bg-slate-800 rounded-full">
+<div class="h-full bg-indigo-400 w-[45%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-label-caps">
+<span>TIKTOK AD MANAGER</span>
+<span>32%</span>
+</div>
+<div class="h-2 bg-slate-800 rounded-full">
+<div class="h-full bg-secondary w-[32%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-label-caps">
+<span>LINKEDIN ADS</span>
+<span>23%</span>
+</div>
+<div class="h-2 bg-slate-800 rounded-full">
+<div class="h-full bg-indigo-600 w-[23%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-800">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Data Visualization" class="w-full h-full object-cover" data-alt="A macro detailed shot of a high-resolution dashboard screen displaying intricate data visualizations and line charts in vibrant indigo and emerald green. The lighting is low-key, emphasizing the glow of the screen pixels and creating a professional technical atmosphere. The composition is angled to show depth and information density." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAbzdf4Oi3Viu5Sl919xGcPkUz8KaK3tmL9a6YLZCGrgnMdNMvas-w3dUDMY6Vx8KXOW9pvkJZpglwNi7CcvSU4cPBmpvFT_40lfMBMkpvADg5N1gBLCIcgbYuevK9aULoRk9svAfGJJTWKsR9dlb82T-RhIhTJtmji_O7Qm3vR3ij6jiTlVmNYBP7kszOxzoT5F3622LpL3GgvBiYWh-QlK_TmZiBQQCheYr9iKT_fKZWpXqhene6VyHSASXK8JDm9cnj6nifLQ"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Weekly Insight</p>
+<p class="text-[10px] text-on-surface-variant">TikTok ROAS increased by 12% following creative refreshes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Metrics Table -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 border-b border-slate-800 flex justify-between items-center">
+<h2 class="font-headline-md text-lg">Detailed Channel Metrics</h2>
+<button class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-on-surface px-4 py-2 rounded-lg text-xs font-label-caps transition-all">
+<span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+            EXPORT PDF
+          </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-900/50">
+<tr>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest">CHANNEL</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest text-right">ALCANCE</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest text-right">ENG.</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest text-right">LEADS</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest text-right">ROAS</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-slate-500 tracking-widest">STATUS</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800">
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+<span class="material-symbols-outlined text-indigo-400 text-sm">social_leaderboard</span>
+</div>
+<span class="text-sm font-bold">Facebook Ads</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">482,192</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">24,109</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">1,204</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm text-secondary">3.8x</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-indigo-400">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+<span class="material-symbols-outlined text-indigo-400 text-sm">camera</span>
+</div>
+<span class="text-sm font-bold">Instagram Ads</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">312,044</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">48,291</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">942</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm text-secondary">5.2x</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-indigo-400">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+<span class="material-symbols-outlined text-indigo-400 text-sm">bolt</span>
+</div>
+<span class="text-sm font-bold">TikTok Ads</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">410,231</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">82,410</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">3,124</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm text-secondary">4.5x</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20">Optimizing</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-indigo-400">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+<span class="material-symbols-outlined text-indigo-400 text-sm">business</span>
+</div>
+<span class="text-sm font-bold">LinkedIn Ads</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">80,435</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">4,210</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm">89</td>
+<td class="px-6 py-4 text-right font-data-mono text-sm text-on-surface-variant">2.1x</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">Paused</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-indigo-400">more_vert</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Nav (Suppressed on Web via CSS) -->
+<footer class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900 border-t border-slate-800 flex items-center justify-around px-4 z-50">
+<div class="flex flex-col items-center gap-1 text-indigo-400">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+<span class="text-[8px] font-bold uppercase">Analytics</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-xl">perm_media</span>
+<span class="text-[8px] font-bold uppercase">Content</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-xl">smart_toy</span>
+<span class="text-[8px] font-bold uppercase">AI Engine</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-xl">leaderboard</span>
+<span class="text-[8px] font-bold uppercase">Leads</span>
+</div>
+</footer>
+</body></html>

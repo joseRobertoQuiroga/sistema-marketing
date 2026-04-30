@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniPresence Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-surface {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+        .ambient-glow {
+            box-shadow: 0 20px 40px -20px rgba(192, 193, 255, 0.15);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#464554",
+                    "tertiary-fixed": "#ffdadb",
+                    "surface-container-high": "#1c2b3c",
+                    "background": "#051424",
+                    "on-background": "#d4e4fa",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#07006c",
+                    "inverse-surface": "#d4e4fa",
+                    "tertiary-fixed-dim": "#ffb2b7",
+                    "outline": "#908fa0",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-fixed": "#40000d",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "primary-fixed": "#e1e0ff",
+                    "surface-dim": "#051424",
+                    "secondary": "#4edea3",
+                    "on-tertiary": "#67001b",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-container-low": "#0d1c2d",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#00a572",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "primary": "#c0c1ff",
+                    "on-secondary-container": "#00311f",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-container": "#0d0096",
+                    "on-secondary": "#003824",
+                    "on-tertiary-fixed-variant": "#92002a",
+                    "on-secondary-fixed": "#002113",
+                    "surface": "#051424",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-tint": "#c0c1ff",
+                    "surface-container": "#122131",
+                    "surface-container-highest": "#273647",
+                    "primary-container": "#8083ff",
+                    "on-surface-variant": "#c7c4d7",
+                    "tertiary": "#ffb2b7",
+                    "error": "#ffb4ab",
+                    "surface-variant": "#273647",
+                    "on-surface": "#d4e4fa",
+                    "on-tertiary-container": "#5b0017",
+                    "inverse-primary": "#494bd6",
+                    "surface-bright": "#2c3a4c",
+                    "on-primary": "#1000a9",
+                    "inverse-on-surface": "#233143",
+                    "tertiary-container": "#ff516a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "40px",
+                    "md": "16px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "max_width": "1440px",
+                    "lg": "24px",
+                    "margin": "32px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Space Grotesk"],
+                    "headline-md": ["Space Grotesk"],
+                    "headline-lg": ["Space Grotesk"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "data-mono": ["Space Grotesk"],
+                    "display-xl": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "data-mono": ["14px", {"lineHeight": "1", "letterSpacing": "0", "fontWeight": "500"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Onboarding Header (TopAppBar Context) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 flex justify-between items-center px-8 h-16 w-full shadow-lg shadow-indigo-500/5">
+<div class="flex items-center gap-4">
+<span class="text-xl font-black tracking-tighter text-white uppercase font-headline-md">OmniPresence Suite</span>
+<div class="h-4 w-px bg-slate-700 mx-2"></div>
+<span class="text-slate-400 font-label-caps uppercase text-[10px] tracking-widest">Organization Setup</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-data-mono">Step 3 of 4</span>
+<div class="w-32 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[75%]"></div>
+</div>
+</div>
+<button class="material-symbols-outlined text-slate-400 hover:text-white transition-colors" data-icon="close">close</button>
+</div>
+</header>
+<main class="pt-32 pb-20 px-margin max-w-7xl mx-auto grid grid-cols-12 gap-gutter">
+<!-- Left Column: Navigation/Progress Sidebar -->
+<aside class="col-span-12 md:col-span-3 space-y-sm">
+<nav class="space-y-sm">
+<div class="flex items-center gap-md p-md rounded-lg bg-surface-container-high border-l-2 border-secondary text-on-surface">
+<span class="material-symbols-outlined text-secondary" data-icon="domain">domain</span>
+<div>
+<p class="font-label-caps text-xs uppercase text-secondary">Completed</p>
+<p class="font-headline-md text-sm">Create Organization</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg bg-surface-container-high border-l-2 border-secondary text-on-surface">
+<span class="material-symbols-outlined text-secondary" data-icon="share">share</span>
+<div>
+<p class="font-label-caps text-xs uppercase text-secondary">Completed</p>
+<p class="font-headline-md text-sm">Connect Socials</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg bg-indigo-500/10 border-l-2 border-primary text-primary">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+<div>
+<p class="font-label-caps text-xs uppercase text-primary">Active</p>
+<p class="font-headline-md text-sm">Knowledge Base</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-lg bg-surface-container-low text-slate-500 opacity-60">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<div>
+<p class="font-label-caps text-xs uppercase">Upcoming</p>
+<p class="font-headline-md text-sm">Activate AI Bot</p>
+</div>
+</div>
+</nav>
+<div class="mt-xl p-lg rounded-xl glass-surface inner-glow relative overflow-hidden group">
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+<h4 class="font-headline-md text-sm mb-xs relative z-10">Need Assistance?</h4>
+<p class="text-body-sm text-on-surface-variant relative z-10">Our deployment engineers are ready to help with your PDF formatting.</p>
+<button class="mt-md text-primary font-label-caps text-[10px] uppercase flex items-center gap-sm group-hover:gap-md transition-all">
+                    Open Help Center <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</aside>
+<!-- Right Column: Active Wizard Content (Step 3 Example) -->
+<section class="col-span-12 md:col-span-9">
+<div class="glass-surface inner-glow rounded-xl p-xl shadow-2xl relative">
+<!-- Content Header -->
+<div class="mb-xl">
+<h1 class="font-headline-lg text-white mb-xs">Train Your AI Assistant</h1>
+<p class="text-on-surface-variant max-w-2xl">Upload your organization's documentation, guidelines, and previous support logs to give the AI bot its brain. We support PDF and CSV formats.</p>
+</div>
+<!-- Bento Grid Layout for Upload & Configuration -->
+<div class="grid grid-cols-6 gap-gutter">
+<!-- Upload Dropzone -->
+<div class="col-span-6 lg:col-span-4 bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-xl p-xl flex flex-col items-center justify-center text-center transition-all hover:border-primary/50 group cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="upload_file">upload_file</span>
+</div>
+<h3 class="font-headline-md text-lg text-white mb-xs">Drag &amp; drop files here</h3>
+<p class="text-body-sm text-on-surface-variant mb-lg">Maximum file size: 50MB. Supports .pdf, .csv, .txt</p>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-headline-md text-sm hover:brightness-110 transition-all active:scale-95">
+                            Browse Local Files
+                        </button>
+</div>
+<!-- Side Stats/Info -->
+<div class="col-span-6 lg:col-span-2 space-y-gutter">
+<div class="bg-surface-container rounded-xl p-lg border border-slate-800">
+<p class="font-label-caps text-[10px] text-slate-500 uppercase mb-sm">Current Index</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-data-mono text-secondary">0.0</span>
+<span class="text-body-sm text-on-surface-variant">Tokens</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-lg border border-slate-800">
+<p class="font-label-caps text-[10px] text-slate-500 uppercase mb-sm">AI Model</p>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="memory" data-weight="fill" style="font-variation-settings: 'FILL' 1;">memory</span>
+<span class="text-body-sm text-white font-medium">GPT-4 Turbo Premium</span>
+</div>
+</div>
+</div>
+<!-- Active Uploads List -->
+<div class="col-span-6">
+<div class="bg-surface-container-low rounded-xl border border-slate-800 overflow-hidden">
+<div class="px-lg py-md border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+<h3 class="font-label-caps text-xs uppercase text-on-surface-variant">Selected Materials (3)</h3>
+<button class="text-xs text-error font-label-caps uppercase hover:underline">Clear All</button>
+</div>
+<div class="divide-y divide-slate-800">
+<div class="px-lg py-md flex items-center justify-between group hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-highest rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">brand_guidelines_2024.pdf</p>
+<p class="text-[10px] text-slate-500 font-data-mono uppercase">2.4 MB • PDF Document</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:text-error transition-colors" data-icon="delete">delete</button>
+</div>
+<div class="px-lg py-md flex items-center justify-between group hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-highest rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="table_chart">table_chart</span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">product_inventory_q4.csv</p>
+<p class="text-[10px] text-slate-500 font-data-mono uppercase">1.1 MB • Spreadsheet</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:text-error transition-colors" data-icon="delete">delete</button>
+</div>
+<div class="px-lg py-md flex items-center justify-between group hover:bg-slate-800/30 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-container-highest rounded flex items-center justify-center relative overflow-hidden">
+<img alt="" class="absolute inset-0 object-cover opacity-50" data-alt="Abstract digital rendering of fluid, flowing purple and blue gradients in a clean, minimalist 3D space, suggesting high-tech data storage or virtual environments. The lighting is soft and cinematic, creating a professional and futuristic atmosphere consistent with a premium AI dashboard UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV6A3z3qSLuCC6w7azPC9Gf-zYAas4uQp4aBiwqGsOmTdKhm3zSB24mqhkwnwiRos2oCafJzZbuM-lYn2Eod19s7YlOLjgARaIVQaQ6rwS8OTGwBIEZ_sq1zCLFdT_q0DZdrd5imP_UFJXTiEBbMukiycZhYLwX8oa80zj2Tq4MtzRUeGm6H8pk3KWmdWGWg-xCHqpdSu7Gqji6haWRanUvQANXkbNBQouyMjsuITgDeKU5agn5YxDXnOSTttYnhXbZSsYix0HqQ"/>
+<span class="material-symbols-outlined text-white relative z-10" data-icon="description">description</span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">customer_service_handbook.pdf</p>
+<p class="text-[10px] text-slate-500 font-data-mono uppercase">12.8 MB • PDF Document</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:text-error transition-colors" data-icon="delete">delete</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="mt-xl flex items-center justify-between border-t border-slate-800 pt-xl">
+<button class="flex items-center gap-sm text-on-surface-variant hover:text-white transition-colors font-headline-md text-sm">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span> Previous Step
+                    </button>
+<div class="flex items-center gap-md">
+<span class="text-body-sm text-on-surface-variant italic">Files will be encrypted during processing</span>
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-headline-md text-base shadow-lg shadow-indigo-500/20 hover:brightness-110 hover:-translate-y-px transition-all active:translate-y-0 active:scale-95">
+                            Process &amp; Continue
+                        </button>
+</div>
+</div>
+</div>
+<!-- Visualization Pane -->
+<div class="mt-gutter grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="glass-surface inner-glow rounded-xl p-lg flex items-center gap-lg">
+<div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<h4 class="text-white font-headline-md text-sm">Enterprise Security</h4>
+<p class="text-body-sm text-on-surface-variant">Your data is SOC2 compliant and never used for general model training.</p>
+</div>
+</div>
+<div class="glass-surface inner-glow rounded-xl p-lg flex items-center gap-lg">
+<div class="w-12 h-12 bg-tertiary/10 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" data-icon="speed">speed</span>
+</div>
+<div>
+<h4 class="text-white font-headline-md text-sm">Fast Indexing</h4>
+<p class="text-body-sm text-on-surface-variant">Proprietary vectorization engine processes 1,000 pages per minute.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB (Hidden on setup as per rules, but showing for instructional intent of 'getting things ready' if needed - here suppressed) -->
+<!-- Toast/Notification Area -->
+<div class="fixed bottom-margin right-margin z-50">
+<div class="glass-surface inner-glow p-md rounded-lg shadow-2xl flex items-center gap-md border-l-4 border-secondary translate-y-0 opacity-100 transition-all duration-500">
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle">check_circle</span>
+<div>
+<p class="text-sm font-medium text-white">Social accounts linked</p>
+<p class="text-[10px] text-on-surface-variant uppercase font-data-mono">TikTok, IG &amp; LinkedIn Active</p>
+</div>
+</div>
+</div>
+</body></html>

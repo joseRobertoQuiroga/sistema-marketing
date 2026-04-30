@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "outline-variant": "#464554",
+                "tertiary-fixed": "#ffdadb",
+                "surface-container-high": "#1c2b3c",
+                "background": "#051424",
+                "on-background": "#d4e4fa",
+                "on-error": "#690005",
+                "on-primary-fixed": "#07006c",
+                "inverse-surface": "#d4e4fa",
+                "tertiary-fixed-dim": "#ffb2b7",
+                "outline": "#908fa0",
+                "on-secondary-fixed-variant": "#005236",
+                "on-tertiary-fixed": "#40000d",
+                "primary-fixed-dim": "#c0c1ff",
+                "primary-fixed": "#e1e0ff",
+                "surface-dim": "#051424",
+                "secondary": "#4edea3",
+                "on-tertiary": "#67001b",
+                "surface-container-lowest": "#010f1f",
+                "surface-container-low": "#0d1c2d",
+                "on-error-container": "#ffdad6",
+                "secondary-container": "#00a572",
+                "on-primary-fixed-variant": "#2f2ebe",
+                "primary": "#c0c1ff",
+                "on-secondary-container": "#00311f",
+                "secondary-fixed": "#6ffbbe",
+                "on-primary-container": "#0d0096",
+                "on-secondary": "#003824",
+                "on-tertiary-fixed-variant": "#92002a",
+                "on-secondary-fixed": "#002113",
+                "surface": "#051424",
+                "error-container": "#93000a",
+                "secondary-fixed-dim": "#4edea3",
+                "surface-tint": "#c0c1ff",
+                "surface-container": "#122131",
+                "surface-container-highest": "#273647",
+                "primary-container": "#8083ff",
+                "on-surface-variant": "#c7c4d7",
+                "tertiary": "#ffb2b7",
+                "error": "#ffb4ab",
+                "surface-variant": "#273647",
+                "on-surface": "#d4e4fa",
+                "on-tertiary-container": "#5b0017",
+                "inverse-primary": "#494bd6",
+                "surface-bright": "#2c3a4c",
+                "on-primary": "#1000a9",
+                "inverse-on-surface": "#233143",
+                "tertiary-container": "#ff516a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "xs": "4px",
+                "xl": "40px",
+                "md": "16px",
+                "sm": "8px",
+                "unit": "4px",
+                "max_width": "1440px",
+                "lg": "24px",
+                "margin": "32px",
+                "gutter": "20px"
+            },
+            "fontFamily": {
+                "body-lg": ["Inter"],
+                "label-caps": ["Space Grotesk"],
+                "headline-md": ["Space Grotesk"],
+                "headline-lg": ["Space Grotesk"],
+                "body-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "data-mono": ["Space Grotesk"],
+                "display-xl": ["Space Grotesk"]
+            },
+            "fontSize": {
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "data-mono": ["14px", {"lineHeight": "1", "letterSpacing": "0", "fontWeight": "500"}],
+                "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-surface {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-glow {
+            box-shadow: 0 0 15px rgba(192, 193, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30">
+<!-- TopAppBar from Shared Components -->
+<header class="bg-slate-900/80 backdrop-blur-xl font-sans text-sm font-medium tracking-tight docked full-width top-0 z-50 border-b border-slate-800 shadow-lg shadow-indigo-500/5 flex justify-between items-center px-8 h-16 w-full fixed">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-white uppercase">OmniPresence Suite</span>
+<div class="relative flex items-center bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-lg group focus-within:border-indigo-500 transition-all">
+<span class="material-symbols-outlined text-slate-400 mr-2 text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs w-64 placeholder:text-slate-500 text-white" placeholder="Search conversations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-400">
+<span class="hover:text-slate-200 transition-all duration-200 cursor-pointer text-xs font-bold uppercase tracking-widest">Jan 1 - Jan 31</span>
+<span class="material-symbols-outlined hover:bg-slate-800/50 transition-all duration-200 p-2 rounded-full cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined hover:bg-slate-800/50 transition-all duration-200 p-2 rounded-full cursor-pointer" data-icon="settings">settings</span>
+</div>
+<button class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded font-bold text-xs uppercase tracking-wider transition-all active:scale-95">
+                New Post
+            </button>
+<div class="w-8 h-8 rounded-full border border-slate-700 overflow-hidden">
+<img alt="User profile" data-alt="A professional headshot of a user in a minimalist style, set against a deep navy background with soft indigo rim lighting. The portrait is high-definition, reflecting a modern corporate aesthetic with subtle glassmorphic textures in the periphery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdj4I3V_HEin08cXLyMBMCpD3z_bTFVxGYIxwZtSYzc0YLP8Zb_W_ACPnXT8gWDikWUaVgnKd44Rt4TP-wtiEn-pH0KnZL4HtybQuaeHJE5Tbt4luHEiLQ1iYIUEULrZGeqRq2x46AJEoqa28MaDopb4GQ0_hFZlQgnM04pUGCca56ONM824-YGpZGWOT2xcac_Io_OZW0dDtOfldvkDAeAdRka6LtLdz7cnQB1BsOoXsK-Q8HvYbsqlxtEPZD-RXUzHLwKwvhig"/>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen pt-16">
+<!-- SideNavBar from Shared Components -->
+<aside class="bg-slate-900 h-screen w-64 border-r border-slate-800 fixed left-0 top-0 z-40 flex flex-col pt-20 pb-8 h-full">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-500 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<div>
+<h3 class="text-white font-bold text-sm leading-tight">Acme Corp</h3>
+<p class="text-slate-500 text-[10px] uppercase font-black tracking-widest">Admin Account</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors font-sans text-xs font-bold uppercase tracking-widest group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="monitoring">monitoring</span>
+                    Analytics Hub
+                </a>
+<a class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors font-sans text-xs font-bold uppercase tracking-widest group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="perm_media">perm_media</span>
+                    Content Hub
+                </a>
+<a class="bg-indigo-500/10 text-indigo-400 border-r-2 border-indigo-500 flex items-center px-6 py-3 w-full font-sans text-xs font-bold uppercase tracking-widest group active-nav-glow" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="smart_toy">smart_toy</span>
+                    AI Bot Engine
+                </a>
+<a class="text-slate-500 flex items-center px-6 py-3 w-full hover:bg-slate-800/80 hover:text-indigo-300 transition-colors font-sans text-xs font-bold uppercase tracking-widest group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="leaderboard">leaderboard</span>
+                    Lead Engine
+                </a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-slate-800 hover:bg-indigo-500 text-white py-3 rounded text-[10px] font-black uppercase tracking-[0.2em] transition-all mb-6">
+                    Upgrade Plan
+                </button>
+<div class="space-y-1">
+<a class="text-slate-500 flex items-center px-2 py-2 hover:text-indigo-300 transition-colors font-sans text-xs font-bold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="help">help</span>
+                        Help Center
+                    </a>
+<a class="text-slate-500 flex items-center px-2 py-2 hover:text-indigo-300 transition-colors font-sans text-xs font-bold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="logout">logout</span>
+                        Log Out
+                    </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 flex flex-col h-[calc(100vh-64px)] overflow-hidden">
+<div class="flex-1 grid grid-cols-12 overflow-hidden">
+<!-- Left: Conversations List -->
+<section class="col-span-3 border-r border-slate-800 bg-surface-container-low flex flex-col">
+<div class="p-lg border-b border-slate-800 bg-slate-900/50">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                            Active Threads
+                            <span class="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full font-data-mono">12</span>
+</h2>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Active Conversation -->
+<div class="p-md border-b border-indigo-500/30 bg-indigo-500/5 cursor-pointer hover:bg-indigo-500/10 transition-colors relative group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-caps text-label-caps text-secondary">HOT LEAD</span>
+<span class="text-[10px] text-slate-500 font-data-mono">2m ago</span>
+</div>
+<h4 class="font-headline-md text-sm text-white mb-1">Alex Rivers</h4>
+<p class="text-slate-400 text-body-sm line-clamp-1">I'm interested in the Enterprise tier pricing...</p>
+</div>
+<!-- Warm Conversation -->
+<div class="p-md border-b border-slate-800 hover:bg-slate-800/30 cursor-pointer transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-caps text-label-caps text-tertiary">WARM</span>
+<span class="text-[10px] text-slate-500 font-data-mono">15m ago</span>
+</div>
+<h4 class="font-headline-md text-sm text-white mb-1">Sarah Chen</h4>
+<p class="text-slate-400 text-body-sm line-clamp-1">Can the AI handle multi-language support?</p>
+</div>
+<!-- Cold Conversation -->
+<div class="p-md border-b border-slate-800 hover:bg-slate-800/30 cursor-pointer transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-caps text-label-caps text-outline">COLD</span>
+<span class="text-[10px] text-slate-500 font-data-mono">1h ago</span>
+</div>
+<h4 class="font-headline-md text-sm text-white mb-1">Jordan Smith</h4>
+<p class="text-slate-400 text-body-sm line-clamp-1">Just browsing the features for now.</p>
+</div>
+<!-- More list items... -->
+<div class="p-md border-b border-slate-800 hover:bg-slate-800/30 cursor-pointer transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-caps text-label-caps text-secondary">HOT LEAD</span>
+<span class="text-[10px] text-slate-500 font-data-mono">2h ago</span>
+</div>
+<h4 class="font-headline-md text-sm text-white mb-1">Impact Global Ltd</h4>
+<p class="text-slate-400 text-body-sm line-clamp-1">Ready to schedule a demo for the team.</p>
+</div>
+</div>
+</section>
+<!-- Center: Chat Area -->
+<section class="col-span-6 flex flex-col bg-slate-900/20">
+<header class="p-md border-b border-slate-800 flex items-center justify-between glass-surface">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-slate-700 bg-slate-800">
+<img alt="Alex Rivers" data-alt="A detailed digital rendering of a modern, professional avatar representing a male customer. He is shown from the chest up against a futuristic, blurred office background with cyan and indigo accent lights. The lighting is soft and cinematic, emphasizing high-end UI aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMkf6WCG4u98aTPA0cV6dxit3T_bQ5-E-2pIyQNnPFucqchu2UJqaFw8r5JTPPRI_KsD4_Duvr7RhedvAKMCZaXbxHVugLkKExBmkBOFHcLbDEacJUEU_uWkrMZTP9PFOxtm6BrIfsklyWg7RDVftf-mmHp-sbivLjLqB7jVo64GlTiuUXARtBqMOu9Zxw2xIuQu_axNE_yT0W0l_G-AyNROfAyx0c0HeBLJstNIoyP9MaMSiJqo9d4H1lBmS58Xwjdxb8R9i6w"/>
+</div>
+<div>
+<h3 class="font-headline-md text-sm text-white">Alex Rivers</h3>
+<p class="text-[10px] text-secondary font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
+                                    AI Bot Active
+                                </p>
+</div>
+</div>
+<button class="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded flex items-center gap-2 font-label-caps text-xs transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="front_hand">front_hand</span>
+                            Take Control
+                        </button>
+</header>
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-lg space-y-6">
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="max-w-[80%]">
+<div class="bg-indigo-600 p-md rounded-xl rounded-tr-none text-white text-body-sm shadow-sm">
+                                    Hello! I saw your ad for the Enterprise suite. I'm looking for a solution that can handle over 50k interactions monthly. Does your platform scale that far?
+                                </div>
+<p class="text-[10px] text-slate-500 font-data-mono mt-1 text-right">10:42 AM • User</p>
+</div>
+</div>
+<!-- AI Response -->
+<div class="flex justify-start">
+<div class="max-w-[80%]">
+<div class="glass-surface border border-indigo-500/20 p-md rounded-xl rounded-tl-none text-on-surface text-body-sm relative group">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-indigo-400 text-lg" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-caps text-[10px] text-indigo-400">OMNI BOT</span>
+</div>
+                                    Absolutely, Alex! Our Enterprise tier is built on a distributed architecture designed exactly for high-volume scaling. We currently support several clients handling 100k+ interactions. Would you like me to send over our scalability whitepaper or a custom quote?
+                                    <div class="absolute -right-12 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
+<button class="p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span></button>
+<button class="p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span></button>
+</div>
+</div>
+<p class="text-[10px] text-slate-500 font-data-mono mt-1">10:42 AM • AI Generated</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="max-w-[80%]">
+<div class="bg-indigo-600 p-md rounded-xl rounded-tr-none text-white text-body-sm shadow-sm">
+                                    A custom quote would be great. My email is alex.rivers@techfront.io and we're looking to start next month.
+                                </div>
+<p class="text-[10px] text-slate-500 font-data-mono mt-1 text-right">10:43 AM • User</p>
+</div>
+</div>
+<!-- AI Response -->
+<div class="flex justify-start">
+<div class="max-w-[80%]">
+<div class="glass-surface border border-indigo-500/20 p-md rounded-xl rounded-tl-none text-on-surface text-body-sm relative group">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-indigo-400 text-lg" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-caps text-[10px] text-indigo-400">OMNI BOT</span>
+</div>
+                                    Perfect, I've captured your email. I'll prepare those details for you. While I do that, are there any specific security certifications (like SOC2 or GDPR) that your compliance team requires?
+                                </div>
+<p class="text-[10px] text-slate-500 font-data-mono mt-1">10:43 AM • AI Generated</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-md glass-surface border-t border-slate-800">
+<div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl p-2 focus-within:border-indigo-500 transition-colors">
+<button class="p-2 text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-white placeholder:text-slate-600" placeholder="Type a message or use '/' for AI commands..." type="text"/>
+<button class="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-400 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Right: Intelligence Panel -->
+<section class="col-span-3 bg-surface-container-low border-l border-slate-800 p-lg flex flex-col gap-lg">
+<!-- Intent Score Card -->
+<div class="bg-slate-900 border border-slate-800 p-md rounded-xl">
+<h4 class="font-label-caps text-label-caps text-slate-500 mb-4">Intent Score</h4>
+<div class="flex items-end justify-between mb-2">
+<span class="text-4xl font-display-xl text-secondary">94</span>
+<span class="text-xs text-secondary font-bold uppercase mb-1">+12% vs last message</span>
+</div>
+<div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[94%] shadow-[0_0_10px_#4edea3]"></div>
+</div>
+</div>
+<!-- Lead Data Card -->
+<div class="space-y-md">
+<h4 class="font-label-caps text-label-caps text-slate-500">Captured Data</h4>
+<div class="space-y-sm">
+<div class="flex flex-col gap-1 p-sm bg-slate-900/50 rounded border border-slate-800/50">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Email Address</span>
+<div class="flex items-center justify-between">
+<span class="text-sm font-data-mono text-white">alex.rivers@techfront.io</span>
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-sm bg-slate-900/50 rounded border border-slate-800/50">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Phone Number</span>
+<div class="flex items-center justify-between">
+<span class="text-sm font-data-mono text-slate-400">Not provided yet</span>
+<span class="material-symbols-outlined text-xs text-slate-600" data-icon="pending">pending</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-sm bg-slate-900/50 rounded border border-slate-800/50">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Company Size</span>
+<div class="flex items-center justify-between">
+<span class="text-sm font-data-mono text-white">500 - 1,000 Employees</span>
+<span class="material-symbols-outlined text-xs text-indigo-400" data-icon="info">info</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Insights -->
+<div class="mt-auto">
+<div class="p-md glass-surface rounded-xl border border-indigo-500/20">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-indigo-400 text-sm" data-icon="auto_awesome">auto_awesome</span>
+<h4 class="text-[10px] font-bold text-white uppercase tracking-widest">Bot Insight</h4>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                                Lead has mentioned "scaling" and "Enterprise" 3 times. Pricing sensitivity is currently <span class="text-secondary font-bold">LOW</span>. Recommend immediate human follow-up for Enterprise Sales path.
+                            </p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
