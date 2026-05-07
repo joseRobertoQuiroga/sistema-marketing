@@ -4,6 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const dotenv = require('dotenv');
+const PlatformManager = require('./platforms/PlatformManager');
+
+const botPausedStatus = new Map(); // conversationId -> boolean
 
 dotenv.config();
 
@@ -74,6 +77,12 @@ async function queryVision(filePath, prompt) {
 
 async function processBotResponse(orgId, conversationId, userMessage) {
     try {
+        if (botPausedStatus.get(conversationId)) {
+            console.log(`⏸️ Bot en pausa para la conversación ${conversationId}, ignorando mensaje.`);
+            await saveMessage(orgId, conversationId, 'user', userMessage);
+            return null;
+        }
+
         const botConfig = await getBotConfig(orgId);
         const history = await getConversationHistory(conversationId);
         
@@ -91,7 +100,7 @@ async function processBotResponse(orgId, conversationId, userMessage) {
         );
         const context = knowledgeRes.rows.map(r => r.content).join('\n');
 
-        const systemPrompt = `Eres ${botConfig.business_name}, un asistente inteligente con tono ${botConfig.tone}.
+        const systemPrompt = `Eres ${botConfig.business_name}, un vendedor amable, directo pero dinámico. Da respuestas claras y concisas.
 Usa el siguiente CONTEXTO para responder al usuario. Si no sabes la respuesta, usa el mensaje de escalado: "${botConfig.escalation_message}".
 
 CONTEXTO:
@@ -101,9 +110,11 @@ HISTORIAL RECIENTE:
 ${history}
 
 INSTRUCCIONES:
-1. Responde en formato JSON.
-2. Incluye "response_text", "intent_score" (0-100), "confidence" (0.0-1.0) y "captured_data" (objeto con datos como nombre, email, producto interesado).
-3. Si el usuario parece muy interesado en comprar, pon intent_score > 80.`;
+1. Responde siempre en formato JSON válido.
+2. Recaba de manera sutil y discreta información del usuario (nombre, localidad, intereses) e inclúyelos en "captured_data".
+3. Clasifica al usuario por KPI en "kpi_category" (valores permitidos: "Interés", "Conversión", "Consultas") basado en su nivel de interacción y añade esto en "captured_data".
+4. Incluye "response_text" (tu respuesta al usuario, clara y concisa), "intent_score" (0-100), "confidence" (0.0-1.0) y "captured_data" (objeto con nombre, localidad, intereses y kpi_category).
+5. Si el usuario muestra intención clara de compra, asigna kpi_category: "Conversión" e intent_score > 80. Si explora catálogo: "Interés". Si hace preguntas generales: "Consultas".`;
 
         const response = await axios.post(OLLAMA_URL, {
             model: "mistral:instruct",
@@ -124,20 +135,8 @@ INSTRUCCIONES:
     }
 }
 
-async function sendMessageToPlatform(conversationId, text, platform = 'telegram') {
-    const { Telegraf } = require('telegraf');
-    console.log(`📤 [PLATFORM RESPONSE] -> ${conversationId}: "${text}"`);
-    if (platform === 'telegram' && process.env.TELEGRAM_TOKEN) {
-        try {
-            const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-            await bot.telegram.sendMessage(conversationId, text);
-            return true;
-        } catch (error) {
-            console.error('❌ Error enviando a Telegram:', error.message);
-            return false;
-        }
-    }
-    return true;
+function setBotPaused(conversationId, isPaused) {
+    botPausedStatus.set(conversationId, isPaused);
 }
 
 module.exports = {
@@ -148,5 +147,5 @@ module.exports = {
     transcribe,
     queryVision,
     processBotResponse,
-    sendMessageToPlatform
+    setBotPaused
 };

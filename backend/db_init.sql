@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS messages (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     conversation_id TEXT NOT NULL,
-    role TEXT CHECK (role IN ('user', 'assistant')),
+    role TEXT CHECK (role IN ('user', 'assistant')), -- Nota: mensajes del admin usan role='assistant' + captured_data.is_admin=true
     content TEXT,
     intent_score INTEGER DEFAULT 0,
     captured_data JSONB DEFAULT '{}',

@@ -8,9 +8,10 @@ const path = require('path');
 const axios = require('axios');
 const dotenv = require('dotenv');
 const { 
-    pool, processBotResponse, sendMessageToPlatform, saveMessage 
+    pool, processBotResponse, saveMessage, setBotPaused 
 } = require('./logic');
 const { botQueue } = require('./queues/botQueue');
+const PlatformManager = require('./platforms/PlatformManager');
 
 dotenv.config();
 
@@ -97,12 +98,13 @@ if (TELEGRAM_TOKEN) {
 }
 
 app.post('/webhook', upload.single('media'), async (req, res) => {
-    const { type, text, conversationId = 'default' } = req.body;
+    const { type, text, conversationId = 'default', platform = 'telegram' } = req.body;
     await botQueue.add('process_message', {
         type: type || 'text',
         text,
         conversationId,
         orgId: TEST_ORG_ID,
+        platform,
         filePath: req.file ? req.file.path : null
     });
     res.status(200).json({ message: 'Procesando en background' });
@@ -111,19 +113,73 @@ app.post('/webhook', upload.single('media'), async (req, res) => {
 app.get('/api/conversations', async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT conversation_id as id, MAX(created_at) as last_activity,
-            (SELECT content FROM messages WHERE conversation_id = m.conversation_id ORDER BY created_at DESC LIMIT 1) as last_msg,
-            MAX(intent_score) as score
-            FROM messages m GROUP BY conversation_id ORDER BY last_activity DESC
+            SELECT 
+                conversation_id as id, 
+                MAX(created_at) as last_activity,
+                (SELECT content FROM messages WHERE conversation_id = m.conversation_id ORDER BY created_at DESC LIMIT 1) as last_msg,
+                MAX(intent_score) as score,
+                (SELECT captured_data FROM messages WHERE conversation_id = m.conversation_id AND role = 'assistant' AND captured_data IS NOT NULL AND captured_data::text != '{}'::text ORDER BY created_at DESC LIMIT 1) as captured_data
+            FROM messages m 
+            GROUP BY conversation_id 
+            ORDER BY last_activity DESC
         `);
+        const formatted = result.rows.map(row => {
+            const data = row.captured_data || {};
+            return {
+                ...row,
+                name: data.nombre || 'Usuario',
+                status: data.kpi_category || 'Consultas',
+                captured_data: data
+            };
+        });
+        res.json(formatted);
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.get('/api/products', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
         res.json(result.rows);
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.get('/api/conversations/:id/messages', async (req, res) => {
     try {
-        const result = await pool.query('SELECT role as type, content, intent_score, created_at as time FROM messages WHERE conversation_id = $1 ORDER BY created_at ASC', [req.params.id]);
-        res.json(result.rows);
+        const result = await pool.query('SELECT role, content, intent_score, created_at as time, captured_data FROM messages WHERE conversation_id = $1 ORDER BY created_at ASC', [req.params.id]);
+        res.json(result.rows.map(r => ({
+            type: (r.captured_data && r.captured_data.is_admin) ? 'admin' : (r.role === 'user' ? 'user' : 'bot'),
+            content: r.content,
+            time: r.time
+        })));
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/conversations/:id/reply', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { text, platform = 'telegram' } = req.body;
+        
+        // Pausar bot automáticamente si el humano interviene
+        setBotPaused(id, true);
+        
+        // Enviar a la plataforma correspondiente
+        await PlatformManager.sendMessage(platform, id, text);
+        
+        // Guardar en BD como assistant pero con flag is_admin
+        await saveMessage(TEST_ORG_ID, id, 'assistant', text, 0, { is_admin: true });
+        
+        // Emitir a los demás clientes
+        io.emit('new_message', { conversationId: id, role: 'admin', content: text });
+        
+        res.json({ success: true, message: "Mensaje enviado" });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/conversations/:id/take-control', async (req, res) => {
+    try {
+        const { id } = req.params;
+        setBotPaused(id, true);
+        res.json({ success: true, message: "Bot pausado" });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 

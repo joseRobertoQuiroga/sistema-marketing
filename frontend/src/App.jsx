@@ -16,6 +16,8 @@ function App() {
   const [activeThread, setActiveThread] = useState(null)
   const [messages, setMessages] = useState([])
   const [currentScreen, setCurrentScreen] = useState('bot')
+  const [replyText, setReplyText] = useState('')
+  const [isBotPaused, setIsBotPaused] = useState(false)
 
   // Cargar hilos iniciales
   useEffect(() => {
@@ -24,7 +26,7 @@ function App() {
     socket.on('new_message', (msg) => {
       // Si el mensaje es para la conversación activa, añadirlo
       if (activeThread && msg.conversationId === activeThread.id) {
-        setMessages(prev => [...prev, { type: msg.role === 'user' ? 'user' : 'bot', content: msg.content, time: 'Just now' }])
+        setMessages(prev => [...prev, { type: msg.role === 'admin' ? 'admin' : (msg.role === 'user' ? 'user' : 'bot'), content: msg.content, time: 'Just now' }])
       }
       // Refrescar lista de hilos para ver el último mensaje y score
       fetchThreads()
@@ -57,12 +59,39 @@ function App() {
     try {
       const res = await axios.get(`${API_URL}/api/conversations/${id}/messages`)
       setMessages(res.data.map(m => ({
-        type: m.type === 'user' ? 'user' : 'bot',
+        type: m.type,
         content: m.content,
         time: new Date(m.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       })))
+      setIsBotPaused(false) // Reiniciamos estado local al cambiar de hilo
     } catch (err) {
       console.error("Error fetching messages", err)
+    }
+  }
+
+  const handleSendMessage = async () => {
+    if (!replyText.trim() || !activeThread) return;
+    const textToSend = replyText;
+    setReplyText(''); // Limpiar optimísticamente
+    
+    try {
+      await axios.post(`${API_URL}/api/conversations/${activeThread.id}/reply`, {
+        text: textToSend,
+        platform: 'telegram' // Por ahora hardcodeado o tomar de metadata
+      });
+      setIsBotPaused(true);
+    } catch (err) {
+      console.error("Error sending message", err);
+    }
+  }
+
+  const handleTakeControl = async () => {
+    if (!activeThread) return;
+    try {
+      await axios.post(`${API_URL}/api/conversations/${activeThread.id}/take-control`);
+      setIsBotPaused(true);
+    } catch (err) {
+      console.error("Error taking control", err);
     }
   }
 
@@ -155,8 +184,8 @@ function App() {
                     )}
                     <div className="flex justify-between items-start mb-1">
                       <span className={`text-[10px] font-bold uppercase tracking-widest
-                        ${thread.status === 'HOT LEAD' ? 'text-secondary' : thread.status === 'WARM' ? 'text-tertiary' : 'text-slate-500'}
-                      `}>{thread.status}</span>
+                        ${thread.status === 'Conversión' ? 'text-secondary' : thread.status === 'Interés' ? 'text-tertiary' : 'text-slate-500'}
+                      `}>{thread.status || 'Consultas'}</span>
                       <span className="text-[10px] text-slate-500 font-mono">{thread.time}</span>
                     </div>
                     <h4 className="text-sm font-semibold text-white mb-1 font-display">{thread.name}</h4>
@@ -176,14 +205,18 @@ function App() {
                         {activeThread.avatar}
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-white font-display">{activeThread.name}</h3>
+                        <h3 className="text-sm font-semibold text-white font-display">{activeThread.name || 'Usuario'}</h3>
                         <p className="text-[10px] text-secondary font-bold uppercase tracking-widest flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
-                          AI Bot Active
+                          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isBotPaused ? 'bg-amber-500' : 'bg-secondary'}`}></span>
+                          {isBotPaused ? 'Manual Override' : 'AI Bot Active'}
                         </p>
                       </div>
                     </div>
-                    <button className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded flex items-center gap-2 text-xs font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+                    <button 
+                      onClick={handleTakeControl}
+                      disabled={isBotPaused}
+                      className={`px-4 py-2 rounded flex items-center gap-2 text-xs font-bold transition-all shadow-lg active:scale-95 ${isBotPaused ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-indigo-500 hover:bg-indigo-400 text-white shadow-indigo-500/20'}`}
+                    >
                       <FrontHand className="w-4 h-4" /> Take Control
                     </button>
                   </header>
@@ -204,8 +237,14 @@ function App() {
                       <input 
                         className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-white placeholder:text-slate-600" 
                         placeholder="Type a message or use '/' for AI commands..." 
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                       />
-                      <button className="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-400 transition-all active:scale-95 shadow-lg shadow-indigo-500/40">
+                      <button 
+                        onClick={handleSendMessage}
+                        className="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-400 transition-all active:scale-95 shadow-lg shadow-indigo-500/40"
+                      >
                         <Send className="w-5 h-5" />
                       </button>
                     </div>
@@ -231,7 +270,9 @@ function App() {
 
                   <div className="space-y-4">
                     <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Captured Data</h4>
-                    <DataField label="Lead Status" value={activeThread.status} info />
+                    <DataField label="Lead Status" value={activeThread.status || 'Consultas'} info />
+                    <DataField label="Location" value={activeThread.captured_data?.localidad || 'Pendiente'} />
+                    <DataField label="Interests" value={activeThread.captured_data?.intereses || 'Pendiente'} />
                     <DataField label="Platform ID" value={activeThread.id.slice(0, 10) + '...'} verified />
                   </div>
 
@@ -242,7 +283,7 @@ function App() {
                         <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">Bot Insight</h4>
                       </div>
                       <p className="text-xs text-slate-400 leading-relaxed italic">
-                        Real-time AI analysis: {activeThread.status === 'HOT LEAD' ? 'High purchase intent detected. Recommend agent intervention.' : 'Lead is currently exploring products.'}
+                        Real-time AI analysis: {activeThread.status === 'Conversión' ? 'Alta intención de compra detectada. Recomiendo intervención humana.' : activeThread.status === 'Interés' ? 'El lead está explorando productos o servicios.' : 'Consultas generales, interactuando de forma amigable.'}
                       </p>
                     </div>
                   </div>
@@ -298,11 +339,19 @@ function NavItem({ icon, label, active, onClick }) {
 }
 
 function TrainingHub() {
-  const products = [
-    { id: 1, name: 'Vestido Rojo Gala', price: 'Bs. 180', category: 'Vestidos', img: 'https://images.unsplash.com/photo-1539008835657-9e8e9680fe0a?q=80&w=400&auto=format&fit=crop' },
-    { id: 2, name: 'Sandalias Plata', price: 'Bs. 120', category: 'Calzado', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop' },
-    { id: 3, name: 'Bolso Elegance', price: 'Bs. 250', category: 'Accesorios', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=400&auto=format&fit=crop' },
-  ];
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/products`);
+        setProducts(res.data);
+      } catch (err) {
+        console.error("Error fetching products", err);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <main className="ml-64 flex-1 flex flex-col h-full bg-[#051424] p-8 overflow-y-auto custom-scrollbar">
@@ -329,14 +378,14 @@ function TrainingHub() {
             {products.map(p => (
               <div key={p.id} className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-indigo-500 transition-all group cursor-pointer shadow-lg hover:shadow-indigo-500/10">
                 <div className="aspect-[3/4] bg-slate-800 relative">
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={p.image_url || 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop'} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/20 transition-all"></div>
                 </div>
                 <div className="p-4 bg-slate-900">
                   <h4 className="text-sm font-bold text-white truncate">{p.name}</h4>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-secondary font-mono text-xs font-bold">{p.price}</span>
-                    <span className="text-[9px] bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase tracking-tighter">{p.category}</span>
+                    <span className="text-secondary font-mono text-xs font-bold">{p.currency || 'Bs.'} {p.price}</span>
+                    <span className="text-[9px] bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase tracking-tighter">{p.category || 'Producto'}</span>
                   </div>
                 </div>
               </div>
@@ -380,11 +429,15 @@ function TrainingHub() {
 }
 
 function Message({ type, content, time }) {
+  const isSelf = type === 'user';
+  const isAdmin = type === 'admin';
   return (
-    <div className={`flex ${type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+    <div className={`flex ${isSelf ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
       <div className="max-w-[80%]">
         <div className={`p-4 rounded-xl text-sm shadow-md
-          ${type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'glass-surface border border-indigo-500/20 text-white rounded-tl-none'}
+          ${isSelf ? 'bg-indigo-600 text-white rounded-tr-none' : 
+            isAdmin ? 'glass-surface border border-emerald-500/30 text-emerald-100 rounded-tl-none' :
+            'glass-surface border border-indigo-500/20 text-white rounded-tl-none'}
         `}>
           {type === 'bot' && (
             <div className="flex items-center gap-2 mb-2">
@@ -392,10 +445,16 @@ function Message({ type, content, time }) {
               <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">OMNI BOT</span>
             </div>
           )}
+          {isAdmin && (
+            <div className="flex items-center gap-2 mb-2">
+              <CorporateFare className="w-4 h-4 text-emerald-400" />
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">AGENT (YOU)</span>
+            </div>
+          )}
           {content}
         </div>
-        <p className={`text-[10px] text-slate-500 font-mono mt-1 ${type === 'user' ? 'text-right' : 'text-left'}`}>
-          {time} • {type === 'user' ? 'User' : 'AI Generated'}
+        <p className={`text-[10px] text-slate-500 font-mono mt-1 ${isSelf ? 'text-right' : 'text-left'}`}>
+          {time} • {isSelf ? 'User' : isAdmin ? 'Agent' : 'AI Generated'}
         </p>
       </div>
     </div>

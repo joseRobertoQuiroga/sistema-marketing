@@ -1,5 +1,6 @@
 const { Worker } = require('bullmq');
-const { processBotResponse, transcribe, queryVision, sendMessageToPlatform } = require('../logic');
+const { processBotResponse, transcribe, queryVision } = require('../logic');
+const PlatformManager = require('../platforms/PlatformManager');
 const fs = require('fs');
 
 console.log('🚀 Worker de Bot iniciado y esperando tareas...');
@@ -28,7 +29,7 @@ const botWorker = new Worker('bot-messages', async (job) => {
 
         if (botResult) {
             console.log(`🤖 Respuesta generada: ${botResult.response_text.slice(0, 50)}...`);
-            await sendMessageToPlatform(conversationId, botResult.response_text, platform || 'telegram');
+            await PlatformManager.sendMessage(platform || 'telegram', conversationId, botResult.response_text);
         }
     } catch (error) {
         console.error(`❌ Error en worker:`, error.message);
