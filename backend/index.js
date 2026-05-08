@@ -21,6 +21,12 @@ const io = socketIo(server, { cors: { origin: "*" } });
 
 app.use(cors());
 app.use(express.json());
+const analyticsRouter = require('./analytics');
+const channelsRouter = require('./channels');
+const { setupCronJobs } = require('./workers/metricsQueue');
+
+app.use('/api/analytics', analyticsRouter);
+app.use('/api/channels', channelsRouter);
 const upload = multer({ dest: 'uploads/' });
 
 if (!fs.existsSync('uploads')) {
@@ -184,4 +190,13 @@ app.post('/api/conversations/:id/take-control', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 API en puerto ${PORT}`));
+server.listen(PORT, async () => {
+    console.log(`🚀 API en puerto ${PORT}`);
+    
+    // Inicializar workers de métricas si Redis está disponible
+    try {
+        await setupCronJobs();
+    } catch (err) {
+        console.warn('⚠️ No se pudo conectar a Redis. BullMQ workers desactivados.', err.message);
+    }
+});

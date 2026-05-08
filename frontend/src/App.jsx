@@ -5,8 +5,11 @@ import {
   Search, Bell as Notifications, Settings, Building2 as CorporateFare, 
   BarChart3 as Monitoring, Play as PermMedia, Bot as SmartToy, LineChart as Leaderboard, 
   HelpCircle as Help, LogOut as Logout, Hand as FrontHand, Send, PlusCircle as AddCircle, 
-  CheckCircle2 as Verified, Clock as Pending, Info, Sparkles as AutoAwesome, ThumbsUp as ThumbUp, RefreshCw as Refresh
+  CheckCircle2 as Verified, Clock as Pending, Info, Sparkles as AutoAwesome, ThumbsUp as ThumbUp, RefreshCw as Refresh,
+  MessageSquare
 } from 'lucide-react'
+import AnalyticsHub from './AnalyticsHub'
+import SettingsView from './SettingsView'
 
 const API_URL = 'http://localhost:3000'
 const socket = io(API_URL)
@@ -15,7 +18,7 @@ function App() {
   const [threads, setThreads] = useState([])
   const [activeThread, setActiveThread] = useState(null)
   const [messages, setMessages] = useState([])
-  const [currentScreen, setCurrentScreen] = useState('bot')
+  const [currentScreen, setCurrentScreen] = useState('chat') // 'chat', 'bot', 'analytics'
   const [replyText, setReplyText] = useState('')
   const [isBotPaused, setIsBotPaused] = useState(false)
 
@@ -113,7 +116,7 @@ function App() {
           <div className="flex items-center gap-4 text-slate-400">
             <span className="text-xs font-bold uppercase tracking-widest hover:text-slate-200 cursor-pointer">Live Dashboard</span>
             <Notifications className="w-5 h-5 hover:text-white cursor-pointer" />
-            <Settings className="w-5 h-5 hover:text-white cursor-pointer" />
+            <Settings className="w-5 h-5 hover:text-white cursor-pointer" onClick={() => setCurrentScreen('settings')} />
           </div>
           <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-indigo-500/20">
             New Lead
@@ -139,7 +142,7 @@ function App() {
             </div>
           </div>
           <nav className="flex-1 space-y-1">
-            <NavItem icon={<Monitoring />} label="Analytics Hub" />
+            <NavItem icon={<Monitoring />} label="Analytics Hub" active={currentScreen === 'analytics'} onClick={() => setCurrentScreen('analytics')} />
             <NavItem icon={<PermMedia />} label="Content Hub" active={currentScreen === 'content'} onClick={() => setCurrentScreen('content')} />
             <NavItem icon={<SmartToy />} label="AI Bot Engine" active={currentScreen === 'bot'} onClick={() => setCurrentScreen('bot')} />
             <NavItem icon={<Leaderboard />} label="Lead Engine" />
@@ -149,6 +152,12 @@ function App() {
               Upgrade Plan
             </button>
             <div className="space-y-1">
+              <div 
+                onClick={() => setCurrentScreen('settings')}
+                className="text-slate-500 flex items-center px-2 py-2 hover:text-indigo-300 transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer"
+              >
+                <Settings className="w-4 h-4 mr-3" /> Ajustes
+              </div>
               <div className="text-slate-500 flex items-center px-2 py-2 hover:text-indigo-300 transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer">
                 <Help className="w-4 h-4 mr-3" /> Help Center
               </div>
@@ -291,6 +300,10 @@ function App() {
               )}
             </section>
           </main>
+        ) : currentScreen === 'analytics' ? (
+          <AnalyticsHub />
+        ) : currentScreen === 'settings' ? (
+          <SettingsView />
         ) : (
           <TrainingHub />
         )}
