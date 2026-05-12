@@ -5,13 +5,13 @@ import {
   Search, Bell as Notifications, Settings, Building2 as CorporateFare, 
   BarChart3 as Monitoring, Play as PermMedia, Bot as SmartToy, LineChart as Leaderboard, 
   HelpCircle as Help, LogOut as Logout, Hand as FrontHand, Send, PlusCircle as AddCircle, 
-  CheckCircle2 as Verified, Clock as Pending, Info, Sparkles as AutoAwesome, ThumbsUp as ThumbUp, RefreshCw as Refresh,
+  CheckCircle2 as Verified, Clock as Pending, Info, Sparkles, ThumbsUp as ThumbUp, RefreshCw as Refresh,
   MessageSquare
 } from 'lucide-react'
 import AnalyticsHub from './AnalyticsHub'
 import SettingsView from './SettingsView'
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'http://localhost:3010'
 const socket = io(API_URL)
 
 function App() {
@@ -21,6 +21,8 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('chat') // 'chat', 'bot', 'analytics'
   const [replyText, setReplyText] = useState('')
   const [isBotPaused, setIsBotPaused] = useState(false)
+  const [showScore, setShowScore] = useState(false)
+  const [showProfile, setShowProfile] = useState(true)
 
   // Cargar hilos iniciales
   useEffect(() => {
@@ -192,9 +194,14 @@ function App() {
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>
                     )}
                     <div className="flex justify-between items-start mb-1">
-                      <span className={`text-[10px] font-bold uppercase tracking-widest
-                        ${thread.status === 'Conversión' ? 'text-secondary' : thread.status === 'Interés' ? 'text-tertiary' : 'text-slate-500'}
-                      `}>{thread.status || 'Consultas'}</span>
+                      <div className="flex items-center gap-2">
+                        {thread.platform === 'telegram' && <Send className="w-3 h-3 text-sky-400 rotate-45" />}
+                        {thread.platform === 'instagram' && <Notifications className="w-3 h-3 text-pink-400" />}
+                        {thread.platform === 'facebook' && <CorporateFare className="w-3 h-3 text-blue-400" />}
+                        <span className={`text-[10px] font-bold uppercase tracking-widest
+                          ${thread.status === 'Conversión' ? 'text-secondary' : thread.status === 'Interés' ? 'text-tertiary' : 'text-slate-500'}
+                        `}>{thread.status || 'Consultas'}</span>
+                      </div>
                       <span className="text-[10px] text-slate-500 font-mono">{thread.time}</span>
                     </div>
                     <h4 className="text-sm font-semibold text-white mb-1 font-display">{thread.name}</h4>
@@ -266,33 +273,62 @@ function App() {
             <section className="w-80 bg-[#0d1c2d] border-l border-slate-800 p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
               {activeThread && (
                 <>
-                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg">
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Intent Score</h4>
-                    <div className="flex items-end justify-between mb-2">
-                      <span className="text-4xl font-bold text-secondary font-display">{activeThread.score || 0}</span>
-                      <span className="text-[10px] text-secondary font-bold uppercase mb-1">Dynamic Rating</span>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-secondary h-full rounded-full shadow-[0_0_15px_#4edea3]" style={{ width: `${activeThread.score || 0}%` }}></div>
-                    </div>
+                  {/* Botón para alternar Score e Inteligencia */}
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setShowScore(!showScore)}
+                      className={`flex-1 py-2 rounded text-[10px] font-black uppercase tracking-widest transition-all border ${showScore ? 'bg-indigo-500 border-indigo-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
+                    >
+                      {showScore ? 'Ocultar Score' : 'Ver Intent Score'}
+                    </button>
                   </div>
 
+                  {showScore && (
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg animate-in fade-in zoom-in duration-300">
+                      <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Intent Score</h4>
+                      <div className="flex items-end justify-between mb-2">
+                        <span className="text-4xl font-bold text-secondary font-display">{activeThread.score || 0}</span>
+                        <span className="text-[10px] text-secondary font-bold uppercase mb-1">Rating Dinámico</span>
+                      </div>
+                      <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div className="bg-secondary h-full rounded-full shadow-[0_0_15px_#4edea3]" style={{ width: `${activeThread.score || 0}%` }}></div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Captured Data</h4>
-                    <DataField label="Lead Status" value={activeThread.status || 'Consultas'} info />
-                    <DataField label="Location" value={activeThread.captured_data?.localidad || 'Pendiente'} />
-                    <DataField label="Interests" value={activeThread.captured_data?.intereses || 'Pendiente'} />
+                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                      Perfil Automático 
+                      <Sparkles className="w-3 h-3 text-indigo-400" />
+                    </h4>
+                    
+                    {/* Perfil del Cliente Dinámico */}
+                    <div className="bg-indigo-500/5 border border-indigo-500/20 p-4 rounded-xl">
+                      <p className="text-[11px] text-slate-300 leading-relaxed italic mb-3">
+                        "{activeThread.name || 'El cliente'} muestra un perfil {activeThread.score > 70 ? 'de alta conversión' : 'informativo'}, interesado principalmente en {activeThread.captured_data?.intereses || 'productos generales'} desde {activeThread.captured_data?.localidad || 'ubicación no detectada'}."
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="text-[9px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-bold uppercase">{activeThread.platform || 'Telegram'}</span>
+                        {activeThread.score > 80 && <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase">Prioridad Alta</span>}
+                        {activeThread.captured_data?.intereses && <span className="text-[9px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-bold uppercase">Target: Moda</span>}
+                      </div>
+                    </div>
+
+                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Datos Capturados</h4>
+                    <DataField label="Estado Lead" value={activeThread.status || 'Consultas'} info />
+                    <DataField label="Ubicación" value={activeThread.captured_data?.localidad || 'Pendiente'} />
+                    <DataField label="Intereses" value={activeThread.captured_data?.intereses || 'Pendiente'} />
                     <DataField label="Platform ID" value={activeThread.id.slice(0, 10) + '...'} verified />
                   </div>
 
                   <div className="mt-auto pt-6">
                     <div className="p-4 glass-surface rounded-xl border border-indigo-500/20 shadow-lg">
                       <div className="flex items-center gap-2 mb-2">
-                        <AutoAwesome className="w-4 h-4 text-indigo-400" />
+                        <Sparkles className="w-4 h-4 text-indigo-400" />
                         <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">Bot Insight</h4>
                       </div>
                       <p className="text-xs text-slate-400 leading-relaxed italic">
-                        Real-time AI analysis: {activeThread.status === 'Conversión' ? 'Alta intención de compra detectada. Recomiendo intervención humana.' : activeThread.status === 'Interés' ? 'El lead está explorando productos o servicios.' : 'Consultas generales, interactuando de forma amigable.'}
+                        Análisis en tiempo real: {activeThread.status === 'Conversión' ? 'Alta intención de compra detectada. Recomiendo intervención humana.' : activeThread.status === 'Interés' ? 'El lead está explorando productos o servicios.' : 'Consultas generales, interactuando de forma amigable.'}
                       </p>
                     </div>
                   </div>
@@ -410,7 +446,7 @@ function TrainingHub() {
         <div className="col-span-4 space-y-6">
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg border-t-4 border-t-indigo-500">
             <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2 font-display">
-              <AutoAwesome className="w-4 h-4 text-indigo-400" /> Creador de Conjuntos
+              <Sparkles className="w-4 h-4 text-indigo-400" /> Creador de Conjuntos
             </h3>
             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
               Arrastra productos desde el catálogo aquí para crear un **"Look Recomendado"**. La IA lo sugerirá automáticamente.

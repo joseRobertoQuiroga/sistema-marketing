@@ -30,10 +30,10 @@ async function getConversationHistory(conversationId, limit = 5) {
     return res.rows.reverse().map(m => `${m.role === 'user' ? 'Usuario' : 'Bot'}: ${m.content}`).join('\n');
 }
 
-async function saveMessage(orgId, conversationId, role, content, score = 0, capturedData = {}) {
+async function saveMessage(orgId, conversationId, role, content, score = 0, capturedData = {}, platform = 'telegram') {
     await pool.query(
-        'INSERT INTO messages (organization_id, conversation_id, role, content, intent_score, captured_data) VALUES ($1, $2, $3, $4, $5, $6)',
-        [orgId, conversationId, role, content, score, JSON.stringify(capturedData)]
+        'INSERT INTO messages (organization_id, conversation_id, role, content, intent_score, captured_data, platform) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [orgId, conversationId, role, content, score, JSON.stringify(capturedData), platform]
     );
 }
 
@@ -75,11 +75,11 @@ async function queryVision(filePath, prompt) {
     }
 }
 
-async function processBotResponse(orgId, conversationId, userMessage) {
+async function processBotResponse(orgId, conversationId, userMessage, platform = 'telegram') {
     try {
         if (botPausedStatus.get(conversationId)) {
             console.log(`⏸️ Bot en pausa para la conversación ${conversationId}, ignorando mensaje.`);
-            await saveMessage(orgId, conversationId, 'user', userMessage);
+            await saveMessage(orgId, conversationId, 'user', userMessage, 0, {}, platform);
             return null;
         }
 
@@ -125,8 +125,8 @@ INSTRUCCIONES:
 
         const result = JSON.parse(response.data.response);
         
-        await saveMessage(orgId, conversationId, 'user', userMessage);
-        await saveMessage(orgId, conversationId, 'assistant', result.response_text, result.intent_score, result.captured_data);
+        await saveMessage(orgId, conversationId, 'user', userMessage, 0, {}, platform);
+        await saveMessage(orgId, conversationId, 'assistant', result.response_text, result.intent_score, result.captured_data, platform);
 
         return result;
     } catch (error) {

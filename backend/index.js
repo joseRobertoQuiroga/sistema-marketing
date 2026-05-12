@@ -124,6 +124,7 @@ app.get('/api/conversations', async (req, res) => {
                 MAX(created_at) as last_activity,
                 (SELECT content FROM messages WHERE conversation_id = m.conversation_id ORDER BY created_at DESC LIMIT 1) as last_msg,
                 MAX(intent_score) as score,
+                (SELECT platform FROM messages WHERE conversation_id = m.conversation_id LIMIT 1) as platform,
                 (SELECT captured_data FROM messages WHERE conversation_id = m.conversation_id AND role = 'assistant' AND captured_data IS NOT NULL AND captured_data::text != '{}'::text ORDER BY created_at DESC LIMIT 1) as captured_data
             FROM messages m 
             GROUP BY conversation_id 
@@ -172,7 +173,7 @@ app.post('/api/conversations/:id/reply', async (req, res) => {
         await PlatformManager.sendMessage(platform, id, text);
         
         // Guardar en BD como assistant pero con flag is_admin
-        await saveMessage(TEST_ORG_ID, id, 'assistant', text, 0, { is_admin: true });
+        await saveMessage(TEST_ORG_ID, id, 'assistant', text, 0, { is_admin: true }, platform);
         
         // Emitir a los demás clientes
         io.emit('new_message', { conversationId: id, role: 'admin', content: text });

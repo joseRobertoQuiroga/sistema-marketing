@@ -7,7 +7,7 @@ import {
     TrendingUp, Users, DollarSign, Activity, MousePointerClick, ChevronUp, Download, Filter, AlertTriangle, BellRing
 } from 'lucide-react';
 
-const API_URL = 'http://localhost:3000/api/analytics';
+const API_URL = 'http://localhost:3010/api/analytics';
 
 export default function AnalyticsHub() {
     const [overview, setOverview] = useState(null);

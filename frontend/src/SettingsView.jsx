@@ -6,7 +6,7 @@ import {
     Clock, Zap
 } from 'lucide-react';
 
-const API_URL = 'http://localhost:3000/api/channels';
+const API_URL = 'http://localhost:3010/api/channels';
 
 // Mapa de plataformas soportadas
 const PLATFORMS = [

@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: omnipresence
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - omnipresence-network
 
@@ -15,7 +17,7 @@ services:
     image: redis:alpine
     container_name: omnipresence-redis
     ports:
-      - "6379:6379"
+      - "6381:6379"
     networks:
       - omnipresence-network
 
@@ -23,7 +25,9 @@ services:
     build: ./backend
     container_name: omnipresence-backend
     ports:
-      - "3000:3000"
+      - "3010:3010"
+    env_file:
+      - ./backend/.env
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/omnipresence
       - REDIS_URL=redis://redis:6379
@@ -42,7 +46,7 @@ services:
     build: ./frontend
     container_name: omnipresence-frontend
     ports:
-      - "5173:5173"
+      - "5180:5178"
     volumes:
       - ./frontend:/app
       - /app/node_modules

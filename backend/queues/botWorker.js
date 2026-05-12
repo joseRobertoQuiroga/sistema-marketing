@@ -25,7 +25,7 @@ const botWorker = new Worker('bot-messages', async (job) => {
             if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
         }
 
-        const botResult = await processBotResponse(orgId, conversationId, inputContent);
+        const botResult = await processBotResponse(orgId, conversationId, inputContent, platform);
 
         if (botResult) {
             console.log(`🤖 Respuesta generada: ${botResult.response_text.slice(0, 50)}...`);
