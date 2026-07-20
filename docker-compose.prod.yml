@@ -1,0 +1,88 @@
+services:
+  db:
+    image: ankane/pgvector:latest
+    container_name: omnipresence-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: omnipresence
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - omnipresence-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d omnipresence"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    container_name: omnipresence-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - omnipresence-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: omnipresence-backend
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://user:${POSTGRES_PASSWORD:-password}@db:5432/omnipresence
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=15m
+      - REFRESH_TOKEN_EXPIRES_IN=7d
+      - TOKEN_ENCRYPTION_KEY=${TOKEN_ENCRYPTION_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:80}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:80}
+      - DOMAIN_URL=${DOMAIN_URL:-http://localhost:80}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - OLLAMA_URL=http://host.docker.internal:11434/api/generate
+      - OLLAMA_EMBED_URL=http://host.docker.internal:11434/api/embeddings
+      - META_APP_ID=${META_APP_ID}
+      - META_APP_SECRET=${META_APP_SECRET}
+      - META_WEBHOOK_VERIFY_TOKEN=${META_WEBHOOK_VERIFY_TOKEN}
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - omnipresence-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: omnipresence-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - omnipresence-network
+    restart: unless-stopped
+
+networks:
+  omnipresence-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

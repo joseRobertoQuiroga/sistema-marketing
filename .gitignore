@@ -4,3 +4,7 @@
 dist/
 build/
 .DS_Store
+uploads/
+*.log
+.vite/
+coverage/

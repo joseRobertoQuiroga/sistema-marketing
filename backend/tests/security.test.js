@@ -1,4 +1,4 @@
-const { sanitizeUserMessage } = require('../middleware/security');
+const { sanitizeUserMessage } = require('../src/infrastructure/utils/securityUtils');
 
 describe('Security Module: Sanitization', () => {
     
